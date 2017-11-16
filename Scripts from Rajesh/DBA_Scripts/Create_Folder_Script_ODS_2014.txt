@@ -1,0 +1,414 @@
+cd /DZ:\Archive_Files\
+
+mkdir 2014
+
+cd /DZ:\Archive_Files\2014\
+
+for /L %f in (1, 1, 12) do md %f
+
+
+
+cd /DZ:\Archive_Files\2014\1\
+md LEB-ODSMSSQL1,LEB-ODSMSSQL2
+
+cd /DZ:\Archive_Files\2014\1\LEB-ODSMSSQL1
+md AUS,DNK,NLD
+cd AUS
+md CDR_0,Main_Summary,Other_CDRs,Voice_Summary
+cd /DZ:\Archive_Files\2014\1\LEB-ODSMSSQL1
+cd DNK
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\1\LEB-ODSMSSQL1
+cd NLD
+md CDR_0,Main_Summary,Activesnapshot
+
+
+cd /DZ:\Archive_Files\2014\1\LEB-ODSMSSQL2
+md CHE,DEU,ESP,GBR,BLUEPIPE
+cd CHE 
+md CDR_0,Main_Summary
+cd /DZ:\Archive_Files\2014\1\LEB-ODSMSSQL2
+cd DEU
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\1\LEB-ODSMSSQL2
+cd ESP
+md CDR_0,Main_Summary,Communications,Other_CDRs
+cd /DZ:\Archive_Files\2014\1\LEB-ODSMSSQL2
+cd GBR
+md CDR_0,Main_Summary,Other_CDRs,Duration_Intervals,Activesnapshot,MSISDN_BALANCE
+
+
+
+
+
+
+cd /DZ:\Archive_Files\2014\2\
+md LEB-ODSMSSQL1,LEB-ODSMSSQL2
+
+cd /DZ:\Archive_Files\2014\2\LEB-ODSMSSQL1
+md AUS,DNK,NLD
+cd AUS
+md CDR_0,Main_Summary,Other_CDRs,Voice_Summary
+cd /DZ:\Archive_Files\2014\2\LEB-ODSMSSQL1
+cd DNK
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\2\LEB-ODSMSSQL1
+cd NLD
+md CDR_0,Main_Summary,Activesnapshot
+
+
+cd /DZ:\Archive_Files\2014\2\LEB-ODSMSSQL2
+md CHE,DEU,ESP,GBR,BLUEPIPE
+cd CHE 
+md CDR_0,Main_Summary
+cd /DZ:\Archive_Files\2014\2\LEB-ODSMSSQL2
+cd DEU
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\2\LEB-ODSMSSQL2
+cd ESP
+md CDR_0,Main_Summary,Communications,Other_CDRs
+cd /DZ:\Archive_Files\2014\2\LEB-ODSMSSQL2
+cd GBR
+md CDR_0,Main_Summary,Other_CDRs,Duration_Intervals,Activesnapshot,MSISDN_BALANCE
+
+
+
+
+
+cd /DZ:\Archive_Files\2014\3\
+md LEB-ODSMSSQL1,LEB-ODSMSSQL2
+
+cd /DZ:\Archive_Files\2014\3\LEB-ODSMSSQL1
+md AUS,DNK,NLD
+cd AUS
+md CDR_0,Main_Summary,Other_CDRs,Voice_Summary
+cd /DZ:\Archive_Files\2014\3\LEB-ODSMSSQL1
+cd DNK
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\3\LEB-ODSMSSQL1
+cd NLD
+md CDR_0,Main_Summary,Activesnapshot
+
+
+cd /DZ:\Archive_Files\2014\3\LEB-ODSMSSQL2
+md CHE,DEU,ESP,GBR,BLUEPIPE
+cd CHE 
+md CDR_0,Main_Summary
+cd /DZ:\Archive_Files\2014\3\LEB-ODSMSSQL2
+cd DEU
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\3\LEB-ODSMSSQL2
+cd ESP
+md CDR_0,Main_Summary,Communications,Other_CDRs
+cd /DZ:\Archive_Files\2014\3\LEB-ODSMSSQL2
+cd GBR
+md CDR_0,Main_Summary,Other_CDRs,Duration_Intervals,Activesnapshot,MSISDN_BALANCE
+
+
+
+
+
+cd /DZ:\Archive_Files\2014\4\
+md LEB-ODSMSSQL1,LEB-ODSMSSQL2
+
+cd /DZ:\Archive_Files\2014\4\LEB-ODSMSSQL1
+md AUS,DNK,NLD
+cd AUS
+md CDR_0,Main_Summary,Other_CDRs,Voice_Summary
+cd /DZ:\Archive_Files\2014\4\LEB-ODSMSSQL1
+cd DNK
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\4\LEB-ODSMSSQL1
+cd NLD
+md CDR_0,Main_Summary,Activesnapshot
+
+
+cd /DZ:\Archive_Files\2014\4\LEB-ODSMSSQL2
+md CHE,DEU,ESP,GBR,BLUEPIPE
+cd CHE 
+md CDR_0,Main_Summary
+cd /DZ:\Archive_Files\2014\4\LEB-ODSMSSQL2
+cd DEU
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\4\LEB-ODSMSSQL2
+cd ESP
+md CDR_0,Main_Summary,Communications,Other_CDRs
+cd /DZ:\Archive_Files\2014\4\LEB-ODSMSSQL2
+cd GBR
+md CDR_0,Main_Summary,Other_CDRs,Duration_Intervals,Activesnapshot,MSISDN_BALANCE
+
+
+
+
+
+cd /DZ:\Archive_Files\2014\5\
+md LEB-ODSMSSQL1,LEB-ODSMSSQL2
+
+cd /DZ:\Archive_Files\2014\5\LEB-ODSMSSQL1
+md AUS,DNK,NLD
+cd AUS
+md CDR_0,Main_Summary,Other_CDRs,Voice_Summary
+cd /DZ:\Archive_Files\2014\5\LEB-ODSMSSQL1
+cd DNK
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\5\LEB-ODSMSSQL1
+cd NLD
+md CDR_0,Main_Summary,Activesnapshot
+
+
+cd /DZ:\Archive_Files\2014\5\LEB-ODSMSSQL2
+md CHE,DEU,ESP,GBR,BLUEPIPE
+cd CHE 
+md CDR_0,Main_Summary
+cd /DZ:\Archive_Files\2014\5\LEB-ODSMSSQL2
+cd DEU
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\5\LEB-ODSMSSQL2
+cd ESP
+md CDR_0,Main_Summary,Communications,Other_CDRs
+cd /DZ:\Archive_Files\2014\5\LEB-ODSMSSQL2
+cd GBR
+md CDR_0,Main_Summary,Other_CDRs,Duration_Intervals,Activesnapshot,MSISDN_BALANCE
+
+
+
+
+
+cd /DZ:\Archive_Files\2014\6\
+md LEB-ODSMSSQL1,LEB-ODSMSSQL2
+
+cd /DZ:\Archive_Files\2014\6\LEB-ODSMSSQL1
+md AUS,DNK,NLD
+cd AUS
+md CDR_0,Main_Summary,Other_CDRs,Voice_Summary
+cd /DZ:\Archive_Files\2014\6\LEB-ODSMSSQL1
+cd DNK
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\6\LEB-ODSMSSQL1
+cd NLD
+md CDR_0,Main_Summary,Activesnapshot
+
+
+cd /DZ:\Archive_Files\2014\6\LEB-ODSMSSQL2
+md CHE,DEU,ESP,GBR,BLUEPIPE
+cd CHE 
+md CDR_0,Main_Summary
+cd /DZ:\Archive_Files\2014\6\LEB-ODSMSSQL2
+cd DEU
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\6\LEB-ODSMSSQL2
+cd ESP
+md CDR_0,Main_Summary,Communications,Other_CDRs
+cd /DZ:\Archive_Files\2014\6\LEB-ODSMSSQL2
+cd GBR
+md CDR_0,Main_Summary,Other_CDRs,Duration_Intervals,Activesnapshot,MSISDN_BALANCE
+
+
+
+
+
+
+cd /DZ:\Archive_Files\2014\7\
+md LEB-ODSMSSQL1,LEB-ODSMSSQL2
+
+cd /DZ:\Archive_Files\2014\7\LEB-ODSMSSQL1
+md AUS,DNK,NLD
+cd AUS
+md CDR_0,Main_Summary,Other_CDRs,Voice_Summary
+cd /DZ:\Archive_Files\2014\7\LEB-ODSMSSQL1
+cd DNK
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\7\LEB-ODSMSSQL1
+cd NLD
+md CDR_0,Main_Summary,Activesnapshot
+
+
+cd /DZ:\Archive_Files\2014\7\LEB-ODSMSSQL2
+md CHE,DEU,ESP,GBR,BLUEPIPE
+cd CHE 
+md CDR_0,Main_Summary
+cd /DZ:\Archive_Files\2014\7\LEB-ODSMSSQL2
+cd DEU
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\7\LEB-ODSMSSQL2
+cd ESP
+md CDR_0,Main_Summary,Communications,Other_CDRs
+cd /DZ:\Archive_Files\2014\7\LEB-ODSMSSQL2
+cd GBR
+md CDR_0,Main_Summary,Other_CDRs,Duration_Intervals,Activesnapshot,MSISDN_BALANCE
+
+
+
+
+
+cd /DZ:\Archive_Files\2014\8\
+md LEB-ODSMSSQL1,LEB-ODSMSSQL2
+
+cd /DZ:\Archive_Files\2014\8\LEB-ODSMSSQL1
+md AUS,DNK,NLD
+cd AUS
+md CDR_0,Main_Summary,Other_CDRs,Voice_Summary
+cd /DZ:\Archive_Files\2014\8\LEB-ODSMSSQL1
+cd DNK
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\8\LEB-ODSMSSQL1
+cd NLD
+md CDR_0,Main_Summary,Activesnapshot
+
+
+cd /DZ:\Archive_Files\2014\8\LEB-ODSMSSQL2
+md CHE,DEU,ESP,GBR,BLUEPIPE
+cd CHE 
+md CDR_0,Main_Summary
+cd /DZ:\Archive_Files\2014\8\LEB-ODSMSSQL2
+cd DEU
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\8\LEB-ODSMSSQL2
+cd ESP
+md CDR_0,Main_Summary,Communications,Other_CDRs
+cd /DZ:\Archive_Files\2014\8\LEB-ODSMSSQL2
+cd GBR
+md CDR_0,Main_Summary,Other_CDRs,Duration_Intervals,Activesnapshot,MSISDN_BALANCE
+
+
+
+
+
+cd /DZ:\Archive_Files\2014\9\
+md LEB-ODSMSSQL1,LEB-ODSMSSQL2
+
+cd /DZ:\Archive_Files\2014\9\LEB-ODSMSSQL1
+md AUS,DNK,NLD
+cd AUS
+md CDR_0,Main_Summary,Other_CDRs,Voice_Summary
+cd /DZ:\Archive_Files\2014\9\LEB-ODSMSSQL1
+cd DNK
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\9\LEB-ODSMSSQL1
+cd NLD
+md CDR_0,Main_Summary,Activesnapshot
+
+
+cd /DZ:\Archive_Files\2014\9\LEB-ODSMSSQL2
+md CHE,DEU,ESP,GBR,BLUEPIPE
+cd CHE 
+md CDR_0,Main_Summary
+cd /DZ:\Archive_Files\2014\9\LEB-ODSMSSQL2
+cd DEU
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\9\LEB-ODSMSSQL2
+cd ESP
+md CDR_0,Main_Summary,Communications,Other_CDRs
+cd /DZ:\Archive_Files\2014\9\LEB-ODSMSSQL2
+cd GBR
+md CDR_0,Main_Summary,Other_CDRs,Duration_Intervals,Activesnapshot,MSISDN_BALANCE
+
+
+
+
+
+cd /DZ:\Archive_Files\2014\10\
+md LEB-ODSMSSQL1,LEB-ODSMSSQL2
+
+cd /DZ:\Archive_Files\2014\10\LEB-ODSMSSQL1
+md AUS,DNK,NLD
+cd AUS
+md CDR_0,Main_Summary,Other_CDRs,Voice_Summary
+cd /DZ:\Archive_Files\2014\10\LEB-ODSMSSQL1
+cd DNK
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\10\LEB-ODSMSSQL1
+cd NLD
+md CDR_0,Main_Summary,Activesnapshot
+
+
+cd /DZ:\Archive_Files\2014\10\LEB-ODSMSSQL2
+md CHE,DEU,ESP,GBR,BLUEPIPE
+cd CHE 
+md CDR_0,Main_Summary
+cd /DZ:\Archive_Files\2014\10\LEB-ODSMSSQL2
+cd DEU
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\10\LEB-ODSMSSQL2
+cd ESP
+md CDR_0,Main_Summary,Communications,Other_CDRs
+cd /DZ:\Archive_Files\2014\10\LEB-ODSMSSQL2
+cd GBR
+md CDR_0,Main_Summary,Other_CDRs,Duration_Intervals,Activesnapshot,MSISDN_BALANCE
+
+
+
+
+
+cd /DZ:\Archive_Files\2014\11\
+md LEB-ODSMSSQL1,LEB-ODSMSSQL2
+
+cd /DZ:\Archive_Files\2014\11\LEB-ODSMSSQL1
+md AUS,DNK,NLD
+cd AUS
+md CDR_0,Main_Summary,Other_CDRs,Voice_Summary
+cd /DZ:\Archive_Files\2014\11\LEB-ODSMSSQL1
+cd DNK
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\11\LEB-ODSMSSQL1
+cd NLD
+md CDR_0,Main_Summary,Activesnapshot
+
+
+cd /DZ:\Archive_Files\2014\11\LEB-ODSMSSQL2
+md CHE,DEU,ESP,GBR,BLUEPIPE
+cd CHE 
+md CDR_0,Main_Summary
+cd /DZ:\Archive_Files\2014\11\LEB-ODSMSSQL2
+cd DEU
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\11\LEB-ODSMSSQL2
+cd ESP
+md CDR_0,Main_Summary,Communications,Other_CDRs
+cd /DZ:\Archive_Files\2014\11\LEB-ODSMSSQL2
+cd GBR
+md CDR_0,Main_Summary,Other_CDRs,Duration_Intervals,Activesnapshot,MSISDN_BALANCE
+
+
+
+
+
+cd /DZ:\Archive_Files\2014\12\
+md LEB-ODSMSSQL1,LEB-ODSMSSQL2
+
+cd /DZ:\Archive_Files\2014\12\LEB-ODSMSSQL1
+md AUS,DNK,NLD
+cd AUS
+md CDR_0,Main_Summary,Other_CDRs,Voice_Summary
+cd /DZ:\Archive_Files\2014\12\LEB-ODSMSSQL1
+cd DNK
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\12\LEB-ODSMSSQL1
+cd NLD
+md CDR_0,Main_Summary,Activesnapshot
+
+
+cd /DZ:\Archive_Files\2014\12\LEB-ODSMSSQL2
+md CHE,DEU,ESP,GBR,BLUEPIPE
+cd CHE 
+md CDR_0,Main_Summary
+cd /DZ:\Archive_Files\2014\12\LEB-ODSMSSQL2
+cd DEU
+md CDR_0,Main_Summary,Other_CDRs
+cd /DZ:\Archive_Files\2014\12\LEB-ODSMSSQL2
+cd ESP
+md CDR_0,Main_Summary,Communications,Other_CDRs
+cd /DZ:\Archive_Files\2014\12\LEB-ODSMSSQL2
+cd GBR
+md CDR_0,Main_Summary,Other_CDRs,Duration_Intervals,Activesnapshot,MSISDN_BALANCE
+
+
+
+
+
+
+
+EXIT
+
+
+

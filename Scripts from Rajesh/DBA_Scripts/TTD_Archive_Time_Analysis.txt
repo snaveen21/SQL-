@@ -1,0 +1,12 @@
+select DBName, TableName, Partial_BCP_Start, Partial_BCP_End, Partial_BULK_Start, Partial_BULK_END,
+CONVERT(nvarchar(2),(datediff(ss,Partial_BCP_Start,Partial_BCP_End)/3600)) + ':' + 
+CONVERT(nvarchar(2),((datediff(ss,Partial_BCP_Start,Partial_BCP_End)%3600)/60)) + ':' +
+CONVERT(nvarchar(2),(datediff(ss,Partial_BCP_Start,Partial_BCP_End)%60)) + '' AS Partial_BCP_Time,
+CONVERT(nvarchar(2),(datediff(ss,Partial_BULK_Start,Partial_BULK_END)/3600)) + ':' + 
+CONVERT(nvarchar(2),((datediff(ss,Partial_BULK_Start,Partial_BULK_END)%3600)/60)) + ':' +
+CONVERT(nvarchar(2),(datediff(ss,Partial_BULK_Start,Partial_BULK_END)%60)) + '' AS Partial_BULK_Time
+from DBA_TTD_Archive_Track where DBName = 'GBRTTD' and 
+Partial_BCP_Start is not null and Partial_BCP_End is not null and Partial_BULK_Start
+is not null and  Partial_BULK_END is not null
+order by Retention_Days desc, TableName, Partial_BCP_Start
+ 

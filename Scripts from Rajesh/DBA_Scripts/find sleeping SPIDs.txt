@@ -1,0 +1,8 @@
+SELECT spid, a.status, hostname, a.loginame UserName, b.name DBName
+--program_name, cmd, cpu,  physical_io,  blocked  
+FROM master.dbo.sysprocesses  a INNER JOIN master.dbo.sysdatabases b  ON
+a.dbid = b.dbid where spid > 50 and a.status = 'sleeping' and b.name 
+not in ('master','msdb','model','tempdb') and 
+program_name like '%Microsoft SQL Server Management Studio - Query%' and 
+a.loginame not in ('GBR\Rajesh.Goud','GBR\Shailendra.Joshi','GBR\Tejinder.Gahir')
+ORDER BY spid 

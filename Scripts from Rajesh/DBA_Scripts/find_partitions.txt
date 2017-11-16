@@ -1,0 +1,312 @@
+--paritioned table and index details
+=======ORIGINAL QUERY==========
+SELECT
+      OBJECT_NAME(p.object_id) AS ObjectName,
+      --i.name                   AS IndexName,
+      --p.index_id               AS IndexID,
+      ds.name                  AS PartitionScheme,    
+      p.partition_number       AS PartitionNumber,
+      fg.name                  AS FileGroupName,
+      prv_left.value           AS LowerBoundaryValue,
+      prv_right.value          AS UpperBoundaryValue,
+      CASE pf.boundary_value_on_right
+            WHEN 1 THEN 'RIGHT'
+            ELSE 'LEFT' END    AS Range
+      p.rows AS Rows
+FROM sys.partitions                  AS p
+JOIN sys.indexes                     AS i
+     ON i.object_id = p.object_id
+     AND i.index_id = p.index_id
+JOIN sys.data_spaces                 AS ds
+      ON ds.data_space_id = i.data_space_id
+JOIN sys.partition_schemes           AS ps
+      ON ps.data_space_id = ds.data_space_id
+JOIN sys.partition_functions         AS pf
+      ON pf.function_id = ps.function_id
+JOIN sys.destination_data_spaces     AS dds2
+      ON dds2.partition_scheme_id = ps.data_space_id  
+      AND dds2.destination_id = p.partition_number
+JOIN sys.filegroups                  AS fg
+      ON fg.data_space_id = dds2.data_space_id
+LEFT JOIN sys.partition_range_values AS prv_left
+      ON ps.function_id = prv_left.function_id
+      AND prv_left.boundary_id = p.partition_number - 1
+LEFT JOIN sys.partition_range_values AS prv_right
+      ON ps.function_id = prv_right.function_id
+      AND prv_right.boundary_id = p.partition_number  
+WHERE
+      OBJECTPROPERTY(p.object_id, 'ISMSShipped') = 0
+UNION ALL
+--non-partitioned table/indexes
+SELECT
+      OBJECT_NAME(p.object_id)    AS ObjectName,
+      i.name                      AS IndexName,
+      p.index_id                  AS IndexID,
+      NULL                        AS PartitionScheme, 
+      p.partition_number          AS PartitionNumber,
+      fg.name                     AS FileGroupName,   
+      NULL                        AS LowerBoundaryValue,
+      NULL                        AS UpperBoundaryValue,
+      NULL                        AS Boundary,  
+      p.rows                      AS Rows
+FROM sys.partitions     AS p
+JOIN sys.indexes        AS i
+      ON i.object_id = p.object_id
+      AND i.index_id = p.index_id
+JOIN sys.data_spaces    AS ds
+      ON ds.data_space_id = i.data_space_id
+JOIN sys.filegroups           AS fg
+      ON fg.data_space_id = i.data_space_id
+WHERE
+      OBJECTPROPERTY(p.object_id, 'ISMSShipped') = 0
+ORDER BY
+      ObjectName,
+      IndexID,
+      PartitionNumber;
+
+=========To add partitions =========================
+ALTER PARTITION SCHEME PS 
+    NEXT USED [PRIMARY];
+
+ALTER PARTITION FUNCTION PF()
+    SPLIT RANGE (3000);
+=====================================================
+
+
+
+============Modified to get only last 2 partitions==================
+
+SELECT distinct
+db_name() AS DBName,
+      OBJECT_NAME(p.object_id) AS ObjectName,
+      --i.name                   AS IndexName,
+      --p.index_id               AS IndexID,
+      ds.name                  AS PartitionScheme, 
+      pf.name				   AS PartitionFunction,	
+      p.partition_number       AS PartitionNumber,
+      fg.name                  AS FileGroupName,
+      f.name				   AS FileName,
+      f.filename               As FilePath,
+      prv_left.value           AS LowerBoundaryValue,
+      prv_right.value          AS UpperBoundaryValue,
+      CASE pf.boundary_value_on_right
+            WHEN 1 THEN 'RIGHT'
+            ELSE 'LEFT' END    AS Range,
+      p.rows AS Rows
+FROM sys.partitions                  AS p
+JOIN sys.indexes                     AS i
+     ON i.object_id = p.object_id
+     AND i.index_id = p.index_id
+JOIN sys.data_spaces                 AS ds
+      ON ds.data_space_id = i.data_space_id
+JOIN sys.partition_schemes           AS ps
+      ON ps.data_space_id = ds.data_space_id
+JOIN sys.partition_functions         AS pf
+      ON pf.function_id = ps.function_id
+JOIN sys.destination_data_spaces     AS dds2
+      ON dds2.partition_scheme_id = ps.data_space_id  
+      AND dds2.destination_id = p.partition_number
+JOIN sys.filegroups                  AS fg
+      ON fg.data_space_id = dds2.data_space_id
+JOIN sys.sysfilegroups AS fg1
+ON fg.name = fg1.groupname
+JOIN sys.sysfiles AS f
+ON f.groupid = fg1.groupid
+LEFT JOIN sys.partition_range_values AS prv_left
+      ON ps.function_id = prv_left.function_id
+      AND prv_left.boundary_id = p.partition_number - 1
+LEFT JOIN sys.partition_range_values AS prv_right
+      ON ps.function_id = prv_right.function_id
+      AND prv_right.boundary_id = p.partition_number  
+WHERE
+      --OBJECTPROPERTY(p.object_id, 'ISMSShipped') = 0
+      prv_right.value is null
+      or prv_right.value in 
+      (SELECT distinct
+      prv_left.value           AS LowerBoundaryValue
+      FROM sys.partitions                  AS q
+JOIN sys.indexes                     AS i
+     ON i.object_id = q.object_id
+     AND i.index_id = q.index_id
+JOIN sys.data_spaces                 AS ds
+      ON ds.data_space_id = i.data_space_id
+JOIN sys.partition_schemes           AS ps
+      ON ps.data_space_id = ds.data_space_id
+JOIN sys.partition_functions         AS pf
+      ON pf.function_id = ps.function_id
+JOIN sys.destination_data_spaces     AS dds2
+      ON dds2.partition_scheme_id = ps.data_space_id  
+      AND dds2.destination_id = q.partition_number
+JOIN sys.filegroups                  AS fg
+      ON fg.data_space_id = dds2.data_space_id
+LEFT JOIN sys.partition_range_values AS prv_left
+      ON ps.function_id = prv_left.function_id
+      AND prv_left.boundary_id = q.partition_number - 1
+LEFT JOIN sys.partition_range_values AS prv_right
+      ON ps.function_id = prv_right.function_id
+      AND prv_right.boundary_id = q.partition_number  
+WHERE
+      OBJECTPROPERTY(q.object_id, 'ISMSShipped') = 0
+      and prv_right.value is null and q.object_id = p.object_id)
+
+
+
+========================LIST of partitioned tables in DB=====================
+
+select distinct --schema_name(c.schema_id) [schema name], 
+object_name(a.object_id) [table name] 
+--a.name [index name], a.type_desc [index type]
+from (sys.indexes a inner join sys.tables c 
+on a.object_id = c.object_id) 
+inner join sys.data_spaces b on a.data_space_id = b.data_space_id
+where b.type='PS'
+     
+
+============Modified to get only last 2 partitions for particular table==================
+
+
+SELECT distinct
+db_name() AS DBName,
+      OBJECT_NAME(p.object_id) AS ObjectName,
+      --i.name                   AS IndexName,
+      --p.index_id               AS IndexID,
+      ds.name                  AS PartitionScheme, 
+      pf.name				   AS PartitionFunction,	
+      p.partition_number       AS PartitionNumber,
+      fg.name                  AS FileGroupName,
+      f.name				   AS FileName,
+      f.filename               As FilePath,
+      prv_left.value           AS LowerBoundaryValue,
+      prv_right.value          AS UpperBoundaryValue,
+      CASE pf.boundary_value_on_right
+            WHEN 1 THEN 'RIGHT'
+            ELSE 'LEFT' END    AS Range,
+      p.rows AS Rows
+FROM sys.partitions                  AS p
+JOIN sys.indexes                     AS i
+     ON i.object_id = p.object_id
+     AND i.index_id = p.index_id
+JOIN sys.data_spaces                 AS ds
+      ON ds.data_space_id = i.data_space_id
+JOIN sys.partition_schemes           AS ps
+      ON ps.data_space_id = ds.data_space_id
+JOIN sys.partition_functions         AS pf
+      ON pf.function_id = ps.function_id
+JOIN sys.destination_data_spaces     AS dds2
+      ON dds2.partition_scheme_id = ps.data_space_id  
+      AND dds2.destination_id = p.partition_number
+JOIN sys.filegroups                  AS fg
+      ON fg.data_space_id = dds2.data_space_id
+JOIN sys.sysfilegroups AS fg1
+ON fg.name = fg1.groupname
+JOIN sys.sysfiles AS f
+ON f.groupid = fg1.groupid
+LEFT JOIN sys.partition_range_values AS prv_left
+      ON ps.function_id = prv_left.function_id
+      AND prv_left.boundary_id = p.partition_number - 1
+LEFT JOIN sys.partition_range_values AS prv_right
+      ON ps.function_id = prv_right.function_id
+      AND prv_right.boundary_id = p.partition_number  
+WHERE
+      OBJECTPROPERTY(p.object_id, 'ISMSShipped') = 0
+      and OBJECT_NAME(p.object_id) = 'cdr_0_new'
+      and (prv_right.value is null 
+      or prv_right.value in 
+      
+      (SELECT 
+      MAX(prv_left.value)
+FROM sys.partitions                  AS p
+JOIN sys.indexes                     AS i
+     ON i.object_id = p.object_id
+     AND i.index_id = p.index_id
+JOIN sys.data_spaces                 AS ds
+      ON ds.data_space_id = i.data_space_id
+JOIN sys.partition_schemes           AS ps
+      ON ps.data_space_id = ds.data_space_id
+JOIN sys.partition_functions         AS pf
+      ON pf.function_id = ps.function_id
+JOIN sys.destination_data_spaces     AS dds2
+      ON dds2.partition_scheme_id = ps.data_space_id  
+      AND dds2.destination_id = p.partition_number
+JOIN sys.filegroups                  AS fg
+      ON fg.data_space_id = dds2.data_space_id
+JOIN sys.sysfilegroups AS fg1
+ON fg.name = fg1.groupname
+JOIN sys.sysfiles AS f
+ON f.groupid = fg1.groupid
+LEFT JOIN sys.partition_range_values AS prv_left
+      ON ps.function_id = prv_left.function_id
+      AND prv_left.boundary_id = p.partition_number - 1
+LEFT JOIN sys.partition_range_values AS prv_right
+      ON ps.function_id = prv_right.function_id
+      AND prv_right.boundary_id = p.partition_number  
+WHERE
+      OBJECTPROPERTY(p.object_id, 'ISMSShipped') = 0
+      and OBJECT_NAME(p.object_id) = 'cdr_0_new')
+      )
+      
+
+
+
+
+==========================Check partition to Merge===================================================================================
+
+
+/****************************************************************************
+
+select * from DBMONITOR.dbo.DBA_Merge_Partition_Track where DBName = 'NLDView'
+select distinct(DBName) from DBMONITOR.dbo.DBA_Merge_Partition_Track
+
+select distinct --schema_name(c.schema_id) [schema name], 
+object_name(a.object_id) [table name] 
+--a.name [index name], a.type_desc [index type]
+from (sys.indexes a inner join sys.tables c 
+on a.object_id = c.object_id) 
+inner join sys.data_spaces b on a.data_space_id = b.data_space_id
+where b.type='PS'
+
+*****************************************************************************/
+
+
+select Remark, * from DBMONITOR.dbo.DBA_Merge_Partition_Track 
+where DBName = 'NLDView' and TableName = 'Balance'
+
+
+SELECT distinct 
+      DB_NAME()							  AS DBName,
+      OBJECT_NAME(p.object_id)            AS TableName,
+      CONVERT(VARCHAR(256), ds.name)      AS PartitionScheme,
+      CONVERT(VARCHAR(256), pf.name)	  AS PartitionFunction,    
+      p.partition_number                  AS PartitionNumber,
+      CONVERT(VARCHAR(256), fg.name)      AS FileGroupName,
+      CONVERT(DATETIME, prv_left.value)   AS LowerBoundaryValue,
+      CONVERT(DATETIME, prv_right.value)  AS UpperBoundaryValue, 
+      p.rows AS Records
+      
+FROM sys.partitions                  AS p
+JOIN sys.indexes                     AS i
+     ON i.object_id = p.object_id
+     AND i.index_id = p.index_id
+JOIN sys.data_spaces                 AS ds
+      ON ds.data_space_id = i.data_space_id
+JOIN sys.partition_schemes           AS ps
+      ON ps.data_space_id = ds.data_space_id
+JOIN sys.partition_functions         AS pf
+      ON pf.function_id = ps.function_id
+JOIN sys.destination_data_spaces     AS dds2
+      ON dds2.partition_scheme_id = ps.data_space_id  
+      AND dds2.destination_id = p.partition_number
+JOIN sys.filegroups                  AS fg
+      ON fg.data_space_id = dds2.data_space_id
+LEFT JOIN sys.partition_range_values AS prv_left
+      ON ps.function_id = prv_left.function_id
+      AND prv_left.boundary_id = p.partition_number - 1
+LEFT JOIN sys.partition_range_values AS prv_right
+      ON ps.function_id = prv_right.function_id
+      AND prv_right.boundary_id = p.partition_number  
+WHERE
+      OBJECTPROPERTY(p.object_id, 'ISMSShipped') = 0 
+      and p.rows = 0
+      and prv_left.value < GETDATE() 
+      and OBJECT_NAME(p.object_id) = 'Balance'
+order by 1, 5

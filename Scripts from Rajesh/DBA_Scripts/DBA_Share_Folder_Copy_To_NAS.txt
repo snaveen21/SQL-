@@ -1,0 +1,63 @@
+USE [DBA_Dashboard]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+CREATE procedure [dbo].[DBA_Share_Folder_Copy_To_NAS] 
+AS
+
+BEGIN
+
+declare @copyquery varchar(1000)
+declare @map_src varchar(500)
+declare @map_dest varchar(500)
+declare @mkdir varchar(500)
+declare @src_loc varchar(200)
+declare @dest_loc varchar(200)
+declare @date varchar(8)
+
+
+set @date = convert(varchar(8), getdate(), 112)
+
+
+SET @src_loc = '\\leb-nttcifs01\systems\dba'
+
+--\\192.168.0.94\dba\DBASHARE_FOLDER_backup\Db_Share_bckup_20121009
+set @dest_loc = '\\192.168.0.94\dba\DBASHARE_FOLDER_backup'
+
+set @map_src = 'net use P: '+@src_loc+' /persistent:no'
+set @map_dest = 'net use Q: '+@dest_loc+' /persistent:no'
+
+print(@map_src)
+print(@map_dest)
+
+EXEC master..xp_cmdshell @map_src
+EXEC master..xp_cmdshell @map_dest
+
+
+set @mkdir = 'md Q:\Db_Share_bckup_'+@date
+print(@mkdir)
+EXEC master..xp_cmdshell @mkdir
+
+set @dest_loc = 'Q:\Db_Share_bckup_'+@date+'\'
+
+--xcopy \\leb-nttcifs01\systems\dba\ \\192.168.0.94\dba\DBASHARE_FOLDER_backup\Db_Share_bckup_20121009\ /s /e 
+
+set @copyquery= 'xcopy  P:\ '+@dest_loc+' /s /e'
+
+print(@copyquery)
+EXEC master..xp_cmdshell @copyquery
+
+END
+
+
+GO
+
+

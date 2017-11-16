@@ -1,0 +1,217 @@
+/*
+Step 1: Create filegroups and Database files
+*/
+
+USE [master]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILEGROUP [ESP_Main_Summary_2013]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILE ( NAME = N'ESP_Main_Summary_2013', FILENAME = N'H:\ODS2\ESP_ARC\DATA\A_DATA\ESP_Main_Summary_2013.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [ESP_Main_Summary_2013]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILEGROUP [ESP_Main_Summary_2013_01]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILE ( NAME = N'ESP_Main_Summary_2013_01', FILENAME = N'H:\ODS2\ESP_ARC\DATA\A_DATA\ESP_Main_Summary_2013_01.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [ESP_Main_Summary_2013_01]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILEGROUP [ESP_Main_Summary_2013_02]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILE ( NAME = N'ESP_Main_Summary_2013_02', FILENAME = N'H:\ODS2\ESP_ARC\DATA\A_DATA\ESP_Main_Summary_2013_02.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [ESP_Main_Summary_2013_02]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILEGROUP [ESP_Main_Summary_2013_03]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILE ( NAME = N'ESP_Main_Summary_2013_03', FILENAME = N'H:\ODS2\ESP_ARC\DATA\A_DATA\ESP_Main_Summary_2013_03.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [ESP_Main_Summary_2013_03]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILEGROUP [ESP_Main_Summary_2013_04]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILE ( NAME = N'ESP_Main_Summary_2013_04', FILENAME = N'H:\ODS2\ESP_ARC\DATA\A_DATA\ESP_Main_Summary_2013_04.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [ESP_Main_Summary_2013_04]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILEGROUP [ESP_Main_Summary_2013_05]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILE ( NAME = N'ESP_Main_Summary_2013_05', FILENAME = N'H:\ODS2\ESP_ARC\DATA\A_DATA\ESP_Main_Summary_2013_05.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [ESP_Main_Summary_2013_05]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILEGROUP [ESP_Main_Summary_2013_06]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILE ( NAME = N'ESP_Main_Summary_2013_06', FILENAME = N'H:\ODS2\ESP_ARC\DATA\A_DATA\ESP_Main_Summary_2013_06.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [ESP_Main_Summary_2013_06]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILEGROUP [ESP_Main_Summary_2013_07]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILE ( NAME = N'ESP_Main_Summary_2013_07', FILENAME = N'H:\ODS2\ESP_ARC\DATA\A_DATA\ESP_Main_Summary_2013_07.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [ESP_Main_Summary_2013_07]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILEGROUP [ESP_Main_Summary_2013_08]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILE ( NAME = N'ESP_Main_Summary_2013_08', FILENAME = N'H:\ODS2\ESP_ARC\DATA\A_DATA\ESP_Main_Summary_2013_08.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [ESP_Main_Summary_2013_08]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILEGROUP [ESP_Main_Summary_2013_09]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILE ( NAME = N'ESP_Main_Summary_2013_09', FILENAME = N'H:\ODS2\ESP_ARC\DATA\A_DATA\ESP_Main_Summary_2013_09.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [ESP_Main_Summary_2013_09]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILEGROUP [ESP_Main_Summary_2013_10]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILE ( NAME = N'ESP_Main_Summary_2013_10', FILENAME = N'H:\ODS2\ESP_ARC\DATA\A_DATA\ESP_Main_Summary_2013_10.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [ESP_Main_Summary_2013_10]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILEGROUP [ESP_Main_Summary_2013_11]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILE ( NAME = N'ESP_Main_Summary_2013_11', FILENAME = N'H:\ODS2\ESP_ARC\DATA\A_DATA\ESP_Main_Summary_2013_11.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [ESP_Main_Summary_2013_11]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILEGROUP [ESP_Main_Summary_2013_12]
+GO
+ALTER DATABASE [ESPView_Archive] ADD FILE ( NAME = N'ESP_Main_Summary_2013_12', FILENAME = N'H:\ODS2\ESP_ARC\DATA\A_DATA\ESP_Main_Summary_2013_12.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [ESP_Main_Summary_2013_12]
+GO
+
+
+/*
+Step 2: PARTITION FUNCTION
+*/
+
+USE [ESPView_Archive]
+GO
+SET ANSI_PADDING ON
+GO
+CREATE PARTITION FUNCTION [ESP_Main_Summary_2013_FN](datetime) AS RANGE RIGHT FOR VALUES
+(
+N'2013-01-01T00:00:00', N'2013-02-01T00:00:00', N'2013-03-01T00:00:00', N'2013-04-01T00:00:00',
+N'2013-05-01T00:00:00', N'2013-06-01T00:00:00', N'2013-07-01T00:00:00', N'2013-08-01T00:00:00',
+N'2013-09-01T00:00:00', N'2013-10-01T00:00:00', N'2013-11-01T00:00:00', N'2013-12-01T00:00:00'
+)
+SET ANSI_PADDING OFF
+GO
+
+
+/*
+Step 3: PARTITION SCHEMA
+*/
+
+USE [ESPView_Archive]
+GO
+SET ANSI_PADDING ON
+GO
+Create PARTITION SCHEME [ESP_Main_Summary_2013_SCH] AS PARTITION [ESP_Main_Summary_2013_FN] TO (
+[ESP_Main_Summary_2013],
+[ESP_Main_Summary_2013_01],[ESP_Main_Summary_2013_02],[ESP_Main_Summary_2013_03],[ESP_Main_Summary_2013_04],[ESP_Main_Summary_2013_05],
+[ESP_Main_Summary_2013_06],[ESP_Main_Summary_2013_07],[ESP_Main_Summary_2013_08],[ESP_Main_Summary_2013_09],[ESP_Main_Summary_2013_10],
+[ESP_Main_Summary_2013_11],[ESP_Main_Summary_2013_12])
+GO
+SET ANSI_PADDING OFF
+GO
+
+SELECT * FROM SYS.partition_functions --
+--SELECT * FROM SYS.partition_parameters
+SELECT * FROM SYS.partition_range_values --
+SELECT * FROM SYS.partition_schemes --
+--SELECT * FROM SYS.partitions
+
+
+
+
+USE [ESPView_Archive]
+GO
+
+/****** Object:  Table [dbo].[ESP_Main_Summary]    Script Date: 05/22/2013 11:49:00 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[ESP_Main_Summary_2013](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[IMSI] [varchar](25) NULL,
+	[Charging_Timestamp] [datetime] NOT NULL,
+	[Zone_ID] [int] NULL,
+	[Call_Type] [varchar](4) NULL,
+	[Call_Direction] [varchar](5) NOT NULL,
+	[Duration] [int] NULL,
+	[Billed_Duration] [int] NULL,
+	[Number_of_calls] [int] NOT NULL,
+	[Data_Volume] [bigint] NULL,
+	[Usage] [float] NULL,
+	[Net_Usage] [float] NULL,
+	[Wholesale_Cost] [float] NULL,
+	[Transfer_Cost] [float] NULL,
+	[Carrier_Cost] [float] NULL,
+	[Flag] [int] NULL,
+	[Bundle_ID] [int] NULL,
+ CONSTRAINT [Pk_ID_charging_timestamp_2013] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC,
+	[Charging_Timestamp] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+)
+ON [ESP_Main_Summary_2013_SCH] ([Charging_Timestamp])
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+/*
+Step 6: Create the Non clustered indexes
+* Indexes and Data stored on the same filegroup -- as suggested in the best practise articles
+*/
+
+USE [ESPView_Archive]
+GO
+
+/****** Object:  Index [IX_ESP_Main_Summary_Zone_ID_Call_Type_Call_Direction_Charging_Timestamp_IMSI_Number_of_calls]    Script Date: 05/22/2013 11:54:03 ******/
+CREATE NONCLUSTERED INDEX [IX_ESP_Main_Summary_Zone_ID_Call_Type_Call_Direction_Charging_Timestamp_IMSI_Number_of_calls] ON [dbo].[ESP_Main_Summary_2013] 
+(
+	[Zone_ID] ASC,
+	[Call_Type] ASC,
+	[Call_Direction] ASC,
+	[Charging_Timestamp] ASC
+)
+INCLUDE ( [IMSI],
+[Number_of_calls],
+[Usage]) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, MAXDOP =1)
+GO
+
+
+
+
+/* Step 7
+Create view
+*/
+
+
+
+
+
+

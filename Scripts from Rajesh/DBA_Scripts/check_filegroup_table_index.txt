@@ -1,0 +1,13 @@
+--check filegroup of table
+select distinct groupname as [filegroup], object_name(i.id) as table_name
+from sysfilegroups s, sysindexes i
+where i.id = object_id('REC_CDR')
+ and i.indid < 2
+ and i.groupid = s.groupid
+
+--check filegroups for indexes on the table
+ select distinct object_name(i.id) as table_name, groupname as [filegroup]
+from sysfilegroups s, sysindexes i
+where i.id = object_id('REC_CDR')
+ and i.indid > 1
+ and i.groupid = s.groupid

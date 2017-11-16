@@ -1,0 +1,26 @@
+SELECT session_id as SPID, command, a.text AS Query, start_time, percent_complete, dateadd(second,estimated_completion_time/1000, getdate()) as estimated_completion_time 
+FROM sys.dm_exec_requests r CROSS APPLY sys.dm_exec_sql_text(r.sql_handle) a 
+WHERE r.command in ('BACKUP DATABASE','RESTORE DATABASE') 
+
+
+/************DB backup info***********/
+
+SELECT          physical_device_name,
+                CONVERT(VARCHAR(10),backup_start_date,103) AS backup_start_date,
+				CONVERT(VARCHAR(10),backup_finish_date,103) AS backup_finish_date,
+				--CONVERT(VARCHAR(10),backup_start_date,108) AS backup_start_time,
+				--CONVERT(VARCHAR(10),backup_finish_date,108) AS backup_finish_time,
+				--DATEDIFF(hour, backup_start_date, backup_finish_date) AS [Hours],
+				--DATEDIFF(minute, backup_start_date, backup_finish_date) AS [Minutes],
+				--DATEDIFF(second, backup_start_date, backup_finish_date) AS [Seconds],
+				CONVERT(nvarchar(2),(datediff(ss,backup_start_date,backup_finish_date)/3600)) + ' hr ' + 
+				CONVERT(nvarchar(2),((datediff(ss,backup_start_date,backup_finish_date)%3600)/60)) + ' min ' +
+				CONVERT(nvarchar(2),(datediff(ss,backup_start_date,backup_finish_date)%60)) + ' sec ' AS DB_backup_time,
+                CAST(CAST(backup_size/1024.0/1024.0 AS DECIMAL (9,2)) AS VARCHAR(10)) + ' MB ' AS BackupSizeMB,
+                CAST(CAST(backup_size/1024.0/1024.0/1024.0 AS DECIMAL (9,2)) AS VARCHAR(10)) + ' GB ' AS BackupSizeGB
+FROM msdb.dbo.backupset b
+JOIN msdb.dbo.backupmediafamily m ON b.media_set_id = m.media_set_id
+WHERE database_name = 'ASPState' and physical_device_name like '%Full%' 
+and MONTH(backup_start_date) = 08 and YEAR(backup_start_date) = 2013 -- change month
+ORDER BY backup_finish_date DESC
+

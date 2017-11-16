@@ -1,0 +1,79 @@
+declare @dbname varchar(10)
+declare @datafg varchar(100)
+declare @indexfg varchar(100)
+declare @datafile varchar(max)
+declare @indexfile varchar(max)
+declare @cyear varchar(10)
+declare @cmonth varchar(10)
+declare @odd_even varchar(1)
+declare @fgmonth varchar(100)
+declare @location_data varchar(100)
+declare @location_indx varchar(100)
+declare @tablename varchar(100)
+
+set @dbname = 'ESPTTD_AMS'
+set @cyear = year(getdate())
+set @cmonth = MONTH(getdate())
+set @odd_even = @cmonth%2
+--set @datafg = @dbname+'_'+@cyear+'0'+@cmonth
+set @location_data = 'F:\MSSQL_DATA\ESPTTD_AMS\'
+set @location_indx = 'E:\MSSQL_INDX\ESPTTD_AMS\'
+--print(@dbname)
+--print(@fgmonth)
+
+declare arctable cursor for
+        select tablename from ESPTTD_AMS.dbo.Create_FG_Table_List
+
+open arctable
+
+fetch next from arctable into @tablename
+WHILE (@@Fetch_Status >= 0)        
+BEGIN
+
+--=================================oddmonth================================
+
+set @fgmonth = @dbname+'_'+@tablename+'_oddmonth'
+set @datafg = 'ALTER DATABASE '+@dbname+' ADD FILEGROUP '+@fgmonth
+
+set @indexfg = 'ALTER DATABASE '+@dbname+' ADD FILEGROUP '+@fgmonth+'_Indx'
+
+set @datafile = 'ALTER DATABASE '+@dbname+' ADD FILE ( NAME = N'''+@fgmonth+''', FILENAME = N'''+@location_data+@fgmonth+'.ndf'',SIZE = 2048KB , FILEGROWTH = 5120KB ) TO FILEGROUP '+@fgmonth
+
+set @indexfile = 'ALTER DATABASE '+@dbname+' ADD FILE ( NAME = N'''+@fgmonth+'_Indx'', FILENAME = N'''+@location_indx+@fgmonth+'_Indx.ndf'',SIZE = 2048KB , FILEGROWTH = 5120KB ) TO FILEGROUP '+@fgmonth+'_Indx'
+
+--print(@datafg)
+--print(@indexfg)
+--print(@datafile)
+--print(@indexfile)
+exec(@datafg)
+exec(@indexfg)
+exec(@datafile)
+exec(@indexfile)
+
+--=================================evenmonth================================
+
+set @fgmonth = @dbname+'_'+@tablename+'_evenmonth'
+set @datafg = 'ALTER DATABASE '+@dbname+' ADD FILEGROUP '+@fgmonth
+
+set @indexfg = 'ALTER DATABASE '+@dbname+' ADD FILEGROUP '+@fgmonth+'_Indx'
+
+set @datafile = 'ALTER DATABASE '+@dbname+' ADD FILE ( NAME = N'''+@fgmonth+''', FILENAME = N'''+@location_data+@fgmonth+'.ndf'',SIZE = 2048KB , FILEGROWTH = 5120KB ) TO FILEGROUP '+@fgmonth
+
+set @indexfile = 'ALTER DATABASE '+@dbname+' ADD FILE ( NAME = N'''+@fgmonth+'_Indx'', FILENAME = N'''+@location_indx+@fgmonth+'_Indx.ndf'',SIZE = 2048KB , FILEGROWTH = 5120KB ) TO FILEGROUP '+@fgmonth+'_Indx'
+
+--print(@datafg)
+--print(@indexfg)
+--print(@datafile)
+--print(@indexfile)
+exec(@datafg)
+exec(@indexfg)
+exec(@datafile)
+exec(@indexfile)
+
+
+fetch next from arctable into @Rtablename       
+END
+        
+--Get rid of the cursor        
+CLOSE arctable        
+DEALLOCATE arctable 

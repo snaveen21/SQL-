@@ -1,0 +1,129 @@
+--USE [DBA]
+--GO
+
+--/****** Object:  StoredProcedure [dbo].[DBA_TTD_Archive_File_CleanUp]    Script Date: 12/27/2013 14:40:25 ******/
+--SET ANSI_NULLS ON
+--GO
+
+--SET QUOTED_IDENTIFIER ON
+--GO
+
+
+
+
+
+
+--CREATE procedure [dbo].[DBA_TTD_Archive_File_CleanUp] 
+--AS
+
+--BEGIN
+
+--AMSMediation,AUSTTD_AMS,CHETTD,DEUTTD,DNKTTD,FRATTD,GBRTTD,NLDTTD
+--select * from [LEB-EDWTTD01].DBMONITOR.dbo.DBA_TTD_Archive_Tables where DBName = 'CHETTD'
+
+--create table #DB (DBName varchar(50))
+--insert into #DB values ('AMSMediation')
+--insert into #DB values ('AUSTTD_AMS')
+--insert into #DB values ('CHETTD')
+--insert into #DB values ('DEUTTD')
+--insert into #DB values ('DNKTTD')
+--insert into #DB values ('ESPTTD_AMS')
+--insert into #DB values ('FRATTD')
+--insert into #DB values ('GBRTTD')
+--insert into #DB values ('NLDTTD')
+
+--select * from #DB
+
+declare @DBName varchar(30)
+declare @month varchar(5)
+--declare @month_1 varchar(5)
+declare @tablename varchar(50)
+declare @src_location_1 varchar(500)
+declare @src_location_2 varchar(500)
+declare @dst_location varchar(500)
+declare @movequery_1 varchar(1500)
+declare @movequery_2 varchar(1500)
+declare @file_exist nvarchar(1000)
+
+set @month = 12
+
+--select @month
+
+declare curDB cursor for
+          select DBName from #DB
+          
+open curDB
+
+fetch next from curDB into @DBName
+WHILE (@@Fetch_Status >= 0)        
+BEGIN 
+-----------------------------------------------------------------------
+
+--declare arctable cursor for
+--          select tablename from DBMONITOR.dbo.DBA_TTD_Archive_Tables where DBName = @dbname
+
+--open arctable
+
+--fetch next from arctable into @tablename
+--WHILE (@@Fetch_Status >= 0)        
+--BEGIN 
+------------------------------------------------------------------------------------------
+set @month = 12
+
+while @month > 9
+BEGIN
+
+--\\Leb-edwnas01\dba\Archive_Files_2012_TAPED\1\LEB-EDWTTD02\AMSMediation
+
+
+--\\Leb-edwnas01\dba\Archive_DB_2012\1
+set @dst_location = '\\Leb-edwnas01\dba\Archive_DB_2012\'+@month+'\'
+
+if @month < 10
+begin
+set @month = '0'+@month
+end
+
+--\\Leb-edwnas01\dba\Archiving_into_DBs\201201\LEB-EDWTTD02\NLDTTD
+--set @src_location_1 = '\\Leb-edwnas01\dba\Archive_Files_2012_TAPED\'+@month+'\LEB-EDWTTD02\'+@DBName+'\'
+set @src_location_1 = '\\Leb-edwnas01\dba\Archiving_into_DBs\2012'+@month+'\LEB-EDWTTD02\'+@DBName+'\'
+
+
+
+set @movequery_1= 'move '+@src_location_1+@dbname+'_2012*.* '+@dst_location
+print(@movequery_1)
+EXEC master..xp_cmdshell @movequery_1
+
+
+
+SET @month = @month - 1
+
+END
+
+------------------------------------------------------------------------------------------
+--fetch next from arctable into @tablename      
+--END        
+        
+----Get rid of the cursor        
+--CLOSE arctable        
+--DEALLOCATE arctable
+
+
+-----------------------------------------------------------------------
+fetch next from curDB into @DBName    
+END        
+        
+--Get rid of the cursor        
+CLOSE curDB        
+DEALLOCATE curDB
+
+ 
+
+--END
+
+
+
+
+--GO
+
+

@@ -1,0 +1,20 @@
+BACKUP DATABASE [DW_ODS] TO  DISK = N'C:\FT\stage02\DB_Backup\DB_backups\DW_ODS20120426_FULL.Bak' WITH NOFORMAT, NOINIT,  NAME = N'DW_ODS-Full Database Backup', SKIP, NOREWIND, NOUNLOAD, COMPRESSION,  STATS = 10
+GO
+
+change 'C:\FT\stage02\DB_Backup\DB_backups\DW_ODS20120426_FULL.Bak' -- rename with correct database name
+
+change 'DW_ODS-Full Database Backup'-- rename with correct database name
+
+
+BACKUP DATABASE [BluepipeLogging_Archive_Log201205] 
+TO  DISK = N'R:\BLUEPIPELOGGING\BluepipeLogging_Archive_Log201205_FULL.Bak' WITH NOFORMAT, NOINIT,  
+NAME = N'BluepipeLogging_Archive_Log201205-Full Database Backup', 
+SKIP, NOREWIND, NOUNLOAD, COMPRESSION,  STATS = 10
+GO
+
+
+restore database BluepipeLogging_Archive_Log201205_test
+from disk = 'R:\BLUEPIPELOGGING\BluepipeLogging_Archive_Log201205_FULL.Bak'
+with move 'BluepipeLogging_Archive_Log201205' to 'R:\Tables_Cleanup\BluepipeLogging_Archive_Log201205_test.mdf',
+move 'BluepipeLogging_Archive_Log201205_log' to 'R:\Tables_Cleanup\BluepipeLogging_Archive_Log201205_log_test.ldf'
+, STATS = 10

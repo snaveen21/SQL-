@@ -1,0 +1,64 @@
+select
+	a.FILEID,
+	[FILE_SIZE_MB] = 
+		convert(decimal(12,2),round(a.size/128.000,2)),
+	[SPACE_USED_MB] =
+		convert(decimal(12,2),round(fileproperty(a.name,'SpaceUsed')/128.000,2)),
+	[FREE_SPACE_MB] =
+		convert(decimal(12,2),round((a.size-fileproperty(a.name,'SpaceUsed'))/128.000,2)) ,
+	NAME = left(a.NAME,100),
+	FILENAME = left(a.FILENAME,100)
+from
+	dbo.sysfiles a
+	where convert(decimal(12,2),round(fileproperty(a.name,'SpaceUsed')/128.000,2)) between 0 and 1
+
+--=================================================================================================================
+
+select 
+	a.FILEID,
+	[FILE_SIZE_MB] = 
+		convert(decimal(12,2),round(a.size/128.000,2)),
+	[SPACE_USED_MB] =
+		convert(decimal(12,2),round(fileproperty(a.name,'SpaceUsed')/128.000,2)),
+	[FREE_SPACE_MB] =
+		convert(decimal(12,2),round((a.size-fileproperty(a.name,'SpaceUsed'))/128.000,2)) ,
+		((convert(decimal(12,2),round((a.size-fileproperty(a.name,'SpaceUsed'))/128.000,2)))/(convert(decimal(12,2),round(a.size/128.000,2))))*100 '%Free', 
+	NAME = left(a.NAME,100),
+	FILENAME = left(a.FILENAME,100)
+from
+	dbo.sysfiles a where 
+	--a.filename like 'G:\ODS1\NLD\DATA%' and 
+	convert(decimal(12,2),round((a.size-fileproperty(a.name,'SpaceUsed'))/128.000,2)) > 500
+	and ((convert(decimal(12,2),round((a.size-fileproperty(a.name,'SpaceUsed'))/128.000,2)))/(convert(decimal(12,2),round(a.size/128.000,2))))*100 > 10
+	order by 3
+
+--=================================================================================================================
+
+SELECT DB_NAME(database_id) AS DatabaseName,
+Name AS Logical_Name,
+Physical_Name, (size*8)/1024 SizeMB
+FROM sys.master_files
+WHERE DB_NAME(database_id) = 'GBRTTD'
+GO
+
+ALTER DATABASE GBRTTD REMOVE FILE 	Snapshot_rec_Cdr
+
+/* Get Details of Object on different filegroup
+Finding Objects on Specific Filegroup*/
+SELECT o.[name], o.[type], i.[name], i.[index_id], f.[name]
+FROM sys.indexes i
+INNER JOIN sys.filegroups f
+ON i.data_space_id = f.data_space_id
+INNER JOIN sys.all_objects o
+ON i.[object_id] = o.[object_id]
+WHERE i.data_space_id = f.data_space_id
+AND i.data_space_id =89 -- Filegroup
+
+
+--===All database filesize in particular drive===
+select db.name DBName, mf.name FileName, mf.physical_name CurrentLocation, (mf.size*8)/1024 CurrentSize_MB from sys.master_files mf
+inner join sys.sysdatabases db
+on mf.database_id = db.dbid and 
+mf.physical_name like 'T:%'
+order by db.name
+GO 

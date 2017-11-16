@@ -1,0 +1,231 @@
+----------------------------  LBR-AWSRADB02_RANLDTTD_NLD_WHOLESALE_AUG2015_20150618
+ 
+use RANLDTTD
+go
+
+
+select MIN(COM_CallStartTime) , MAX(COM_CallStartTime) from [RANLDTTD].dbo.NLD_wholesale (nolock)
+go
+-- 2015-04-12 16:17:20.000	2015-07-29 11:59:59.000
+
+---------- NLD_WHOLESALE
+
+
+USE RANLDTTD
+GO
+
+SP_SPACEUSED NLD_WHOLESALE
+GO
+--NLD_WHOLESALE	333973676           	389806400 KB	355435384 KB	34322552 KB	48464 KB
+
+SELECT YEAR(  COM_CallStartTime) , MONTH(  COM_CallStartTime) , COUNT(*) FROM [NLD_WHOLESALE] (NOLOCK) 
+GROUP BY YEAR(  COM_CallStartTime) , MONTH(  COM_CallStartTime)
+GO
+
+/*
+2015	4	90
+2015	5	183
+2015	6	175093030
+2015	7	158880373
+
+*/
+------------------------------- CREATE INDEX
+
+
+
+USE [master]
+GO
+ALTER DATABASE [RANLDTTD] ADD FILEGROUP [RANLDTTD_NLD_WHOLESALE_oddmonth_AUG]
+GO
+ALTER DATABASE [RANLDTTD] ADD FILE ( NAME = N'RANLDTTD_NLD_WHOLESALE_oddmonth_AUG', FILENAME = N'D:\MSSQL_DATA\RANLDTTD\RANLDTTD_NLD_WHOLESALE_oddmonth_AUG.ndf' , SIZE = 314572800KB , FILEGROWTH = 512000KB ) TO FILEGROUP [RANLDTTD_NLD_WHOLESALE_oddmonth_AUG]
+GO
+ALTER DATABASE [RANLDTTD] ADD FILEGROUP [RANLDTTD_NLD_WHOLESALE_oddmonth_AUG_INDX]
+GO
+ALTER DATABASE [RANLDTTD] ADD FILE ( NAME = N'RANLDTTD_NLD_WHOLESALE_oddmonth_AUG_INDX', FILENAME = N'E:\MSSQL_INDEX\RANLDTTD\RANLDTTD_NLD_WHOLESALE_oddmonth_AUG_INDX.ndf' , SIZE = 31457280KB , FILEGROWTH = 512000KB ) TO FILEGROUP [RANLDTTD_NLD_WHOLESALE_oddmonth_AUG_INDX]
+GO
+
+
+------------------------------------- CREATE TABLE
+
+USE [RANLDTTD]
+GO
+
+ 
+
+CREATE TABLE [dbo].[NLD_WHOLESALE_AUG](
+	[ReCORD_TYPE] [varchar](20) NULL,
+	[SerVED_MOBILE_IDENTITY] [varchar](20) NULL,
+	[CalLED_NUMBER] [varchar](30) NULL,
+	[SerVICE_TYPE] [varchar](30) NULL,
+	[SerVICE_IDENTIFICATION] [varchar](20) NULL,
+	[Msc_IDENTIFICATION] [varchar](20) NULL,
+	[LocaTION_AREA_IDENTIFICATION] [varchar](20) NULL,
+	[MS_ClaSS_AUGK] [varchar](20) NULL,
+	[StaRT_CHARGING_DATE] [varchar](20) NULL,
+	[StaRT_CHARGING_TIME] [varchar](20) NULL,
+	[ChaRGEABLE_TIME] [varchar](20) NULL,
+	[DatA_VOLUME] [varchar](20) NULL,
+	[DatA_VOLUME_REFERENCE] [varchar](20) NULL,
+	[End_CHARGE] [varchar](20) NULL,
+	[Tax_CODE] [varchar](20) NULL,
+	[ExcHANGE_RATE_CODE] [varchar](20) NULL,
+	[CounTRY_TAP_CODE] [varchar](20) NULL,
+	[OperATOR_TAP_CODE] [varchar](20) NULL,
+	[StrEAM_NUMBER] [varchar](20) NULL,
+	[TarIFF_SCHEME_NUMBERS] [varchar](20) NULL,
+	[TraFFIC_AGREEMENT_NUMBER] [varchar](20) NULL,
+	[NetWORK_SUBTYPE] [varchar](20) NULL,
+	[SesSION_ID] [varchar](20) NULL,
+	[ParTIAL_CODE] [varchar](20) NULL,
+	[ParTIAL_RECORD_NR] [varchar](20) NULL,
+	[SubTYPE_DEPENDENT] [varchar](20) NULL,
+	[TerMINATING_OPERATOR_CODE] [varchar](20) NULL,
+	[COM_Rec_Type] [int] NULL,
+	[COM_Direction] [int] NULL,
+	[COM_Roaming_Ind] [int] NULL,
+	[COM_RECORDID] [varchar](100) NOT NULL,
+	[COM_A_No] [varchar](64) NULL,
+	[COM_A_Imsi] [varchar](64) NULL,
+	[COM_B_No] [varchar](64) NULL,
+	[COM_C_NO] [varchar](64) NULL,
+	[COM_Duration] [int] NOT NULL,
+	[COM_Uplink_Volume] [bigint] NULL,
+	[COM_Downlink_Volume] [bigint] NULL,
+	[COM_ServedIMSI_RoamingLoc] [varchar](20) NULL,
+	[COM_OtherParty_RoamingLoc] [varchar](20) NULL,
+	[COM_ThirdParty_RoamingLoc] [varchar](20) NULL,
+	[COM_CallStartTime] [datetime] NULL,
+	[COM_CallEndTime] [datetime] NULL,
+	[COM_DialCodePattern] [varchar](20) NULL,
+	[COM_ServiceID] [varchar](20) NULL,
+	[COM_First_LAC] [varchar](30) NULL,
+	[COM_First_Cell] [varchar](30) NULL,
+	[COM_Last_LAC] [varchar](30) NULL,
+	[COM_Last_Cell] [varchar](30) NULL,
+	[COM_Rec_EntityTye] [varchar](30) NULL,
+	[COM_Rec_EntityNo] [varchar](30) NULL,
+	[COM_APN] [varchar](50) NULL,
+	[COM_Prepaid_PostPaid] [int] NULL,
+	[COM_MNO_Charge] [decimal](16, 4) NULL,
+	[File_name] [varchar](100) NOT NULL,
+	[COM_Dumping_time] [datetime] NOT NULL DEFAULT (getdate()),
+	[COM_Rating_time] [datetime] NULL,
+	[COM_Correlation_Time] [datetime] NULL,
+	[COM_Iscorrelated] [int] NULL,
+	[COM_Usage] [bigint] NOT NULL DEFAULT ((0)),
+	[WS_RATEUNIT] [varchar](20) NULL,
+	[WS_PRICEPKGDESC] [varchar](25) NULL,
+	[WS_PRICEPKGID] [varchar](20) NULL,
+	[WS_TIMEPREMIUM] [varchar](20) NULL,
+	[WS_TOTALVOLUMEUNITS] [bigint] NOT NULL DEFAULT ((0)),
+	[WS_ISTRANSFERRED] [tinyint] NOT NULL DEFAULT ((0)),
+	[WS_ISREPROCESSED] [tinyint] NOT NULL DEFAULT ((0)),
+	[WS_PUNITCOST] [decimal](20, 4) NOT NULL DEFAULT ((0)),
+	[WS_CHARGEDUSAGE] [varchar](30) NOT NULL DEFAULT ((0)),
+	[WS_DURATIONUNITS] [int] NOT NULL DEFAULT ((0)),
+	[WS_TOTALCHARGE] [decimal](20, 4) NOT NULL DEFAULT ((0)),
+	[WS_DPFLAG] [int] NOT NULL DEFAULT ((0)),
+	[WS_SERVICEDESC] [varchar](50) NULL,
+	[WS_TIMEBAND] [varchar](20) NULL,
+	[WS_DAYCODE] [varchar](20) NULL,
+	[WS_OPERATORNAME] [varchar](20) NULL,
+	[Reserved_1] [varchar](30) NULL,
+	[Reserved_2] [varchar](30) NULL,
+	[Reserved_3] [varchar](30) NULL,
+	[Reserved_4] [varchar](30) NULL,
+	[WS_RESERV5] [varchar](30) NULL,
+	[Reserved_6] [varchar](30) NULL,
+	[Reserved_7] [varchar](30) NULL,
+	[Reserved_8] [varchar](30) NULL,
+	[Reserved_9] [varchar](30) NULL,
+	[Reserved_10] [varchar](30) NULL,
+ CONSTRAINT [PK_NLD_WHOLESALE_AUG] PRIMARY KEY CLUSTERED 
+(
+	[File_name] ASC,
+	[COM_RECORDID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [RANLDTTD_NLD_WHOLESALE_oddmonth_AUG]
+) ON [RANLDTTD_NLD_WHOLESALE_oddmonth_AUG]
+
+GO
+
+ 
+ ---------- BLUKINSERT NLD_WHOLESALE
+
+SP_SPACEUSED [NLD_WHOLESALE_AUG]
+GO
+
+
+
+ SELECT GETDATE()  -- 2015-07-30 06:44:00.417
+ GO
+ 
+USE [RANLDTTD]
+GO
+
+bulk insert [RANLDTTD].dbo.[NLD_WHOLESALE_AUG] from 'D:\ARCHIVE_FILES_FINAL\201507\RANLDTTD\NLD_WHOLESALE_AUG_DELTA_20150819.txt' with (batchsize=10000,tablock,FIELDTERMINATOR='\t',KeepIdentity) 
+GO  -- (82338653 row(s) affected)
+
+
+ SELECT GETDATE()  -- 2015-07-30 12:39:35.607
+ GO
+ 
+  
+
+USE [RANLDTTD]
+CREATE NONCLUSTERED INDEX [NLD_WS_CALL_START_TMTSP_AUG] ON [dbo].[NLD_WHOLESALE_AUG]
+(
+	[COM_CallStartTime] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [RANLDTTD_NLD_WHOLESALE_oddmonth_AUG_INDX]
+GO
+
+CREATE NONCLUSTERED INDEX [NLD_WS_DUMPING_TMTSP_AUG] ON [dbo].[NLD_WHOLESALE_AUG]
+(
+	[COM_Dumping_time] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [RANLDTTD_NLD_WHOLESALE_oddmonth_AUG_INDX]
+GO
+
+CREATE NONCLUSTERED INDEX [NLD_WS_WS_ISTRANS_AUG] ON [dbo].[NLD_WHOLESALE_AUG]
+(
+	[WS_ISTRANSFERRED] ASC
+)
+WHERE ([WS_ISTRANSFERRED]=(0))
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [RANLDTTD_NLD_WHOLESALE_oddmonth_AUG_INDX]
+GO
+
+
+ SELECT GETDATE()  -- 2015-07-30 12:39:35.607
+ GO
+ 
+ 
+-----------------------
+
+sp_rename 'NLD_WHOLESALE' , 'JUN2015_NLD_WHOLESALE'
+go
+
+sp_rename 'NLD_WHOLESALE_AUG' , 'NLD_WHOLESALE'
+go
+
+update statistics NLD_WHOLESALE
+go
+ 
+ 
+
+SP_SPACEUSED NLD_WHOLESALE
+GO
+-- NLD_WHOLESALE	131353380           	144752424 KB	131980816 KB	12755000 KB	16608 KB
+
+
+SELECT YEAR(  COM_CallStartTime) , MONTH(  COM_CallStartTime) , COUNT(*) FROM JUN2015_NLD_WHOLESALE (NOLOCK) 
+GROUP BY YEAR(  COM_CallStartTime) , MONTH(  COM_CallStartTime)
+GO
+ 
+/*
+
+2015	4	90
+2015	5	183
+2015	6	175093030
+2015	7	158880373
+
+*/
+
+

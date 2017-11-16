@@ -1,0 +1,2 @@
+select * from T_DDL_DATABASE_LEVEL_EVENTS where DatabaseName = 'GBRView' and ObjectType = 'PROCEDURE' and ObjectName = 'GBRView_Zoneid_Update_Procedure'
+and MONTH(eventtime) = 03 and YEAR(EventTime) = 2013

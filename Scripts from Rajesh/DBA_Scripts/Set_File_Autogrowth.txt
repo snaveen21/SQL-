@@ -1,0 +1,72 @@
+--select distinct name, growth, status from  sys.sysfiles 
+
+declare @dbname varchar(50)
+declare @filename nvarchar(256)
+declare @rszfile nvarchar(max)
+
+set @dbname = db_name()
+
+declare rszfile cursor for
+          SELECT distinct 
+      --DB_NAME()							  AS DBName,
+      --OBJECT_NAME(p.object_id)            AS TableName,
+      --CONVERT(VARCHAR(256), ds.name)      AS PartitionScheme,
+      --CONVERT(VARCHAR(256), pf.name)	  AS PartitionFunction,    
+      --p.partition_number                  AS PartitionNumber,
+      --CONVERT(VARCHAR(256), fg.name)      AS FileGroupName,
+      dbf.[name]						  AS FileName
+      --, 
+      --CONVERT(DATETIME, prv_left.value)   AS LowerBoundaryValue,
+      --CONVERT(DATETIME, prv_right.value)  AS UpperBoundaryValu
+      --p.rows AS Records
+      
+FROM sys.partitions                  AS p
+JOIN sys.indexes                     AS i
+     ON i.object_id = p.object_id
+     AND i.index_id = p.index_id
+JOIN sys.data_spaces                 AS ds
+      ON ds.data_space_id = i.data_space_id
+JOIN sys.partition_schemes           AS ps
+      ON ps.data_space_id = ds.data_space_id
+JOIN sys.partition_functions         AS pf
+      ON pf.function_id = ps.function_id
+JOIN sys.destination_data_spaces     AS dds2
+      ON dds2.partition_scheme_id = ps.data_space_id  
+      AND dds2.destination_id = p.partition_number
+JOIN sys.filegroups                  AS fg
+      ON fg.data_space_id = dds2.data_space_id
+LEFT JOIN sys.partition_range_values AS prv_left
+      ON ps.function_id = prv_left.function_id
+      AND prv_left.boundary_id = p.partition_number - 1
+LEFT JOIN sys.partition_range_values AS prv_right
+      ON ps.function_id = prv_right.function_id
+      AND prv_right.boundary_id = p.partition_number 
+JOIN sys.database_files dbf
+      ON fg.[data_space_id] = dbf.[data_space_id]
+JOIN sys.sysfiles sf
+      ON sf.[name] = dbf.[name]    
+WHERE
+      OBJECTPROPERTY(p.object_id, 'ISMSShipped') = 0 
+      and CONVERT(datetime, prv_left.value) >= '2014-02-01 00:00:00.000' 
+      and sf.status = 2 
+      and sf.growth < 64000
+      and sf.growth > 0 
+
+open rszfile
+
+fetch next from rszfile into @filename
+WHILE (@@Fetch_Status >= 0)        
+BEGIN 
+
+set @rszfile = 'ALTER DATABASE '+@dbname+' MODIFY FILE (NAME='+@filename+',FILEGROWTH=500MB)'
+
+print (@rszfile)
+exec (@rszfile)
+
+fetch next from rszfile into @filename     
+END        
+        
+--Get rid of the cursor        
+CLOSE rszfile        
+DEALLOCATE rszfile
+

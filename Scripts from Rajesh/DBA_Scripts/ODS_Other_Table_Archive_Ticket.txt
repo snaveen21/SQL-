@@ -1,0 +1,88 @@
+================================NLDView==========================================
+
+Archive NLD_Main_Summary_2012 and activesnapshot_2012 from NLDView
+
+Archiving completed by running following jobs:
+1. DBA_NLD_Main_Summary_2012_Archive
+2. DBA_NLD_ActiveSnapShot_2012_Archive
+
+
+=================================GBRView=========================================
+
+Archive cdr_wholesale_0, activesnapshot, GBR_Duration_Intervals, GBR_Main_Summary_2012, GPRS_MMS_CDR and MSISDN_Balance_LIVE tables from GBRView
+
+Archiving completed by running below jobs:
+
+1. DBA_GBR_cdr_wholesale_0_Archive
+2. DBA_GBR_activesnapshot_Archive
+3. DBA_GBR_Duration_Intervals_Archive
+4. DBA_GBR_Main_Summary_2012_Archive
+5. DBA_GBR_GPRS_MMS_CDR_Archive
+6. DBA_GBR_MSISDN_Balance_Archive
+
+
+
+
+=================================AUSView=========================================
+
+Archive AUS_Main_Summary and CDR_Wholesale_0 tables from AUSView database on ODS1.
+
+Archiving completed by running following job:
+DBA_AUS_Main_Summary_Archive
+DBA_AUS_CDR_Wholesale_0_Archive
+
+
+=================================DeuTMobView=========================================
+
+Archive CDR_GPRS_0, CDR_GSM_0 and CDR_POST_MRC_0 tables from DeuTMobView database on ODS2.
+
+Archiving completed by running following jobs:
+
+1. DBA_DeuTMobView_CDR_POST_MRC_0_Archive
+2. DBA_DeuTMobView_CDR_GPRS_0_Archive
+3. DBA_DeuTMobView_CDR_GSM_0_Archive
+
+
+=================================ESPView=========================================
+
+Archive ESP_Main_Summary, CDR_Wholesale_Mediator_0, GPRS_CDR_0 and Communications tables from ESPView database on ODS2
+
+Archiving completed by running following jobs:
+
+1. DBA_ESP_Main_Summary_Archive
+2. DBA_ESP_CDR_Wholesale_Mediator_0_Archive
+3. DBA_ESP_GPRS_CDR_0_Archive
+4. DBA_ESP_Communications_Archive
+
+
+=================================DEUView=========================================
+
+Archive Prod_lifecycle_Balance_Snapshot table from DEUView database on ODS2.
+
+Archiving completed by running the job 'DBA_DEU_Prod_lifecycle_Balance_Snapshot_Archive'
+
+
+
+=================================DNKViewV2=========================================
+
+Archive DNK_Main_Summary_2013 table from DNKViewV2 database on ODS1.		-- Awaiting Dinesh response
+
+Archiving completed by running the job 'DBA_DNK_Main_Summary_2013_Archive'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,10 @@
+SELECT ps.database_id, ps.OBJECT_ID,
+ps.index_id, b.name,
+ps.avg_fragmentation_in_percent
+FROM sys.dm_db_index_physical_stats (DB_ID(), OBJECT_ID('GBRTTD.dbo.DATA_REC_CDR'), NULL, NULL, NULL) AS ps
+INNER JOIN sys.indexes AS b ON ps.OBJECT_ID = b.OBJECT_ID
+AND ps.index_id = b.index_id
+WHERE ps.database_id = DB_ID() and ps.OBJECT_ID = OBJECT_ID('GBRTTD.dbo.DATA_REC_CDR')
+--ORDER BY ps.OBJECT_ID
+GO
+

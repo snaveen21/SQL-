@@ -1,0 +1,241 @@
+/*
+Step 1: Create filegroups and Database files
+*/
+
+USE [master]
+GO
+ALTER DATABASE [DEUView] ADD FILEGROUP [DEU_Voice_Summary_Default]
+GO
+ALTER DATABASE [DEUView] ADD FILE ( NAME = N'DEU_Voice_Summary_Default', FILENAME = N'H:\ODS2\DEU\DATA\A_DATA\DEU_Voice_Summary\DEU_Voice_Summary_Default.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [DEU_Voice_Summary_Default]
+GO
+
+
+USE [master]
+GO
+ALTER DATABASE [DEUView] ADD FILEGROUP [DEU_Voice_Summary_2009]
+GO
+ALTER DATABASE [DEUView] ADD FILE ( NAME = N'DEU_Voice_Summary_2009', FILENAME = N'H:\ODS2\DEU\DATA\A_DATA\DEU_Voice_Summary\DEU_Voice_Summary_2009.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [DEU_Voice_Summary_2009]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [DEUView] ADD FILEGROUP [DEU_Voice_Summary_2010]
+GO
+ALTER DATABASE [DEUView] ADD FILE ( NAME = N'DEU_Voice_Summary_2010', FILENAME = N'H:\ODS2\DEU\DATA\A_DATA\DEU_Voice_Summary\DEU_Voice_Summary_2010.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [DEU_Voice_Summary_2010]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [DEUView] ADD FILEGROUP [DEU_Voice_Summary_2011]
+GO
+ALTER DATABASE [DEUView] ADD FILE ( NAME = N'DEU_Voice_Summary_2011', FILENAME = N'H:\ODS2\DEU\DATA\A_DATA\DEU_Voice_Summary\DEU_Voice_Summary_2011.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [DEU_Voice_Summary_2011]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [DEUView] ADD FILEGROUP [DEU_Voice_Summary_2012_Q1]
+GO
+ALTER DATABASE [DEUView] ADD FILE ( NAME = N'DEU_Voice_Summary_2012_Q1', FILENAME = N'H:\ODS2\DEU\DATA\A_DATA\DEU_Voice_Summary\DEU_Voice_Summary_2012_Q1.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [DEU_Voice_Summary_2012_Q1]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [DEUView] ADD FILEGROUP [DEU_Voice_Summary_2012_Q2]
+GO
+ALTER DATABASE [DEUView] ADD FILE ( NAME = N'DEU_Voice_Summary_2012_Q2', FILENAME = N'H:\ODS2\DEU\DATA\A_DATA\DEU_Voice_Summary\DEU_Voice_Summary_2012_Q2.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [DEU_Voice_Summary_2012_Q2]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [DEUView] ADD FILEGROUP [DEU_Voice_Summary_2012_Q3]
+GO
+ALTER DATABASE [DEUView] ADD FILE ( NAME = N'DEU_Voice_Summary_2012_Q3', FILENAME = N'H:\ODS2\DEU\DATA\A_DATA\DEU_Voice_Summary\DEU_Voice_Summary_2012_Q3.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [DEU_Voice_Summary_2012_Q3]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [DEUView] ADD FILEGROUP [DEU_Voice_Summary_2012_Q4]
+GO
+ALTER DATABASE [DEUView] ADD FILE ( NAME = N'DEU_Voice_Summary_2012_Q4', FILENAME = N'H:\ODS2\DEU\DATA\A_DATA\DEU_Voice_Summary\DEU_Voice_Summary_2012_Q4.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [DEU_Voice_Summary_2012_Q4]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [DEUView] ADD FILEGROUP [DEU_Voice_Summary_2013_Q1]
+GO
+ALTER DATABASE [DEUView] ADD FILE ( NAME = N'DEU_Voice_Summary_2013_Q1', FILENAME = N'H:\ODS2\DEU\DATA\A_DATA\DEU_Voice_Summary\DEU_Voice_Summary_2013_Q1.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [DEU_Voice_Summary_2013_Q1]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [DEUView] ADD FILEGROUP [DEU_Voice_Summary_2013_Q2]
+GO
+ALTER DATABASE [DEUView] ADD FILE ( NAME = N'DEU_Voice_Summary_2013_Q2', FILENAME = N'H:\ODS2\DEU\DATA\A_DATA\DEU_Voice_Summary\DEU_Voice_Summary_2013_Q2.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [DEU_Voice_Summary_2013_Q2]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [DEUView] ADD FILEGROUP [DEU_Voice_Summary_2013_Q3]
+GO
+ALTER DATABASE [DEUView] ADD FILE ( NAME = N'DEU_Voice_Summary_2013_Q3', FILENAME = N'H:\ODS2\DEU\DATA\A_DATA\DEU_Voice_Summary\DEU_Voice_Summary_2013_Q3.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [DEU_Voice_Summary_2013_Q3]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [DEUView] ADD FILEGROUP [DEU_Voice_Summary_2013_Q4]
+GO
+ALTER DATABASE [DEUView] ADD FILE ( NAME = N'DEU_Voice_Summary_2013_Q4', FILENAME = N'H:\ODS2\DEU\DATA\A_DATA\DEU_Voice_Summary\DEU_Voice_Summary_2013_Q4.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [DEU_Voice_Summary_2013_Q4]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [DEUView] ADD FILEGROUP [DEU_Voice_Summary_2014_Q1]
+GO
+ALTER DATABASE [DEUView] ADD FILE ( NAME = N'DEU_Voice_Summary_2014_Q1', FILENAME = N'H:\ODS2\DEU\DATA\A_DATA\DEU_Voice_Summary\DEU_Voice_Summary_2014_Q1.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [DEU_Voice_Summary_2014_Q1]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [DEUView] ADD FILEGROUP [DEU_Voice_Summary_2014_Q2]
+GO
+ALTER DATABASE [DEUView] ADD FILE ( NAME = N'DEU_Voice_Summary_2014_Q2', FILENAME = N'H:\ODS2\DEU\DATA\A_DATA\DEU_Voice_Summary\DEU_Voice_Summary_2014_Q2.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [DEU_Voice_Summary_2014_Q2]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [DEUView] ADD FILEGROUP [DEU_Voice_Summary_2014_Q3]
+GO
+ALTER DATABASE [DEUView] ADD FILE ( NAME = N'DEU_Voice_Summary_2014_Q3', FILENAME = N'H:\ODS2\DEU\DATA\A_DATA\DEU_Voice_Summary\DEU_Voice_Summary_2014_Q3.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [DEU_Voice_Summary_2014_Q3]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [DEUView] ADD FILEGROUP [DEU_Voice_Summary_2014_Q4]
+GO
+ALTER DATABASE [DEUView] ADD FILE ( NAME = N'DEU_Voice_Summary_2014_Q4', FILENAME = N'H:\ODS2\DEU\DATA\A_DATA\DEU_Voice_Summary\DEU_Voice_Summary_2014_Q4.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [DEU_Voice_Summary_2014_Q4]
+GO
+
+USE [master]
+GO
+ALTER DATABASE [DEUView] ADD FILEGROUP [DEU_Voice_Summary_2015_Q1]
+GO
+ALTER DATABASE [DEUView] ADD FILE ( NAME = N'DEU_Voice_Summary_2015_Q1', FILENAME = N'H:\ODS2\DEU\DATA\A_DATA\DEU_Voice_Summary\DEU_Voice_Summary_2015_Q1.ndf' , SIZE = 1024KB , FILEGROWTH = 10240KB ) TO FILEGROUP [DEU_Voice_Summary_2015_Q1]
+GO
+
+
+
+/*
+Step 2: PARTITION FUNCTION
+*/
+
+USE [DEUView]
+GO
+SET ANSI_PADDING ON
+GO
+CREATE PARTITION FUNCTION [DEU_Voice_Summary_FN](datetime) AS RANGE RIGHT FOR VALUES
+(
+N'2009-01-01T00:00:00', N'2010-01-01T00:00:00', N'2011-01-01T00:00:00',
+N'2012-01-01T00:00:00', N'2012-04-01T00:00:00', N'2012-07-01T00:00:00', N'2012-10-01T00:00:00',
+N'2013-01-01T00:00:00', N'2013-04-01T00:00:00', N'2013-07-01T00:00:00', N'2013-10-01T00:00:00',
+N'2014-01-01T00:00:00', N'2014-04-01T00:00:00', N'2014-07-01T00:00:00', N'2014-10-01T00:00:00',
+N'2015-01-01T00:00:00'
+)
+SET ANSI_PADDING OFF
+GO
+
+
+/*
+Step 3: PARTITION SCHEMA
+*/
+
+USE [DEUView]
+GO
+SET ANSI_PADDING ON
+GO
+Create PARTITION SCHEME [DEU_Voice_Summary_SCH] AS PARTITION [DEU_Voice_Summary_FN] TO (
+[DEU_Voice_Summary_Default],
+[DEU_Voice_Summary_2009],[DEU_Voice_Summary_2010],[DEU_Voice_Summary_2011],
+[DEU_Voice_Summary_2012_Q1],[DEU_Voice_Summary_2012_Q2],[DEU_Voice_Summary_2012_Q3],[DEU_Voice_Summary_2012_Q4],
+[DEU_Voice_Summary_2013_Q1],[DEU_Voice_Summary_2013_Q2],[DEU_Voice_Summary_2013_Q3],[DEU_Voice_Summary_2013_Q4],
+[DEU_Voice_Summary_2014_Q1],[DEU_Voice_Summary_2014_Q2],[DEU_Voice_Summary_2014_Q3],[DEU_Voice_Summary_2014_Q4],
+[DEU_Voice_Summary_2015_Q1])
+GO
+SET ANSI_PADDING OFF
+GO
+
+--SELECT * FROM SYS.partition_functions --
+----SELECT * FROM SYS.partition_parameters
+--SELECT * FROM SYS.partition_range_values --
+--SELECT * FROM SYS.partition_schemes --
+----SELECT * FROM SYS.partitions
+
+
+
+
+USE [DEUView]
+GO
+
+/****** Object:  Table [dbo].[DEU_Voice_Summary_NEW]    Script Date: 12/27/2013 10:59:00 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[DEU_Voice_Summary_NEW](
+	[ID] [int] IDENTITY(252234268,1) NOT NULL,
+	[Charging_Timestamp] [datetime] NULL,
+	[Zone_ID] [int] NULL,
+	[Distributor_ID] [int] NULL,
+	[Call_Directioin] [varchar](2) NULL,
+	[Duration] [int] NULL,
+	[Billed_Duration] [int] NULL,
+	[Number_of_calls] [int] NULL,
+	[Ethnicity] [varchar](50) NULL,
+	[Usage] [float] NULL,
+	[Net_Usage] [float] NULL,
+	[Calculated_Wholesale_Cost] [float] NULL,
+	[Transfer_Cost] [float] NULL,
+	[Carrier_Cost] [float] NULL,
+	[Event_type] [int] NULL,
+	[IN_Bundle] [varchar](25) NULL,
+	[PricePlan_ID] [int] NULL,
+	[Account_Type_1] [int] NULL,
+	[Charge_Amount_1] [decimal](20, 4) NULL,
+	[Duration_1] [int] NULL,
+	[Account_Type_2] [int] NULL,
+	[Charge_Amount_2] [decimal](20, 4) NULL,
+	[Duration_2] [int] NULL,
+	[Account_Type_3] [int] NULL,
+	[Charge_Amount_3] [decimal](20, 4) NULL,
+	[Duration_3] [int] NULL
+)
+ON [DEU_Voice_Summary_SCH] ([Charging_Timestamp])
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+/*
+Step 6: Create the Non clustered indexes
+* Indexes and Data stored on the same filegroup -- as suggested in the best practise articles
+*/
+
+
+
+
+
+
+/* Step 7
+Create view
+*/
+
+
+
+
+
+

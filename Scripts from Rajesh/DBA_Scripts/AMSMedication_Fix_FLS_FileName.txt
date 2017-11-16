@@ -1,0 +1,17 @@
+BCP "select * from AMSMEDIATION.dbo.FLS_FILENAME(nolock) where DUMPING_TS between '2014-04-22 00:00:00.000' and '2014-04-30 23:59:59.997'" queryout E:\Archive\AMSMEDIATION\AMSMEDIATION_FLS_FILENAME_201404_22_30_FIX.txt -o E:\Archive\AMSMEDIATION\AMSMEDIATION_FLS_FILENAME_201404_22_30_FIX_log.txt -c -T -S LEB-EDWTTD01
+
+
+--bulk insert AMSMEDIATION.dbo.FLS_FILENAME_New from  
+--'E:\Archive\AMSMEDIATION\AMSMEDIATION_FLS_FILENAME_201404_22_30_FIX.txt' 
+--with (batchsize=10000,tablock,KeepIdentity)
+--GO
+
+
+--exec sp_rename FLS_FILENAME, FLS_FILENAME_OLD
+--exec sp_rename FLS_FILENAME_NEW, FLS_FILENAME
+--GO
+
+exec sp_spaceused FLS_FILENAME -- 53         
+exec sp_spaceused FLS_FILENAME_NEW -- 51
+
+--TRUNCATE TABLE FLS_FILENAME_NEW

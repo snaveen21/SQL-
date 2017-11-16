@@ -1,0 +1,118 @@
+use FRAVIEWUnwantedTables
+go
+
+Declare @intSHRINKto int
+
+Select      @intSHRINKto =  110000 -- current allocated space
+While       @intSHRINKto >= 60000  -- desired free space --> 36568 --> do 3GB in 3GB
+Begin
+DBCC SHRINKFILE (N'topups_data',@intSHRINKto);  
+Select      @intSHRINKto = @intSHRINKto-100
+End
+
+SELECT file_id, name
+FROM sys.database_files;
+GO
+DBCC SHRINKFILE (1, TRUNCATEONLY);
+
+--===========================================================================================
+
+declare @FILE_SIZE_MB varchar(20)
+declare @SPACE_USED_MB varchar(20)
+declare @FREE_SPACE_MB varchar(20)
+declare @NAME nvarchar(100)
+declare @shrink_query nvarchar(1000)
+declare @batch_size varchar(10)
+declare @dbname varchar(20)
+
+
+--select
+--	a.FILEID,
+--	[FILE_SIZE_MB] = 
+--		convert(decimal(12,2),round(a.size/128.000,2)),
+--	[SPACE_USED_MB] =
+--		convert(decimal(12,2),round(fileproperty(a.name,'SpaceUsed')/128.000,2)),
+--	[FREE_SPACE_MB] =
+--		convert(decimal(12,2),round((a.size-fileproperty(a.name,'SpaceUsed'))/128.000,2)) ,
+--	NAME = left(a.NAME,100),
+--	FILENAME = left(a.FILENAME,100)
+	
+--	into #temp
+--from
+--	dbo.sysfiles a where --a.filename like '%GPRS_MMS_CDR%' and 
+--	convert(decimal(12,2),round((a.size-fileproperty(a.name,'SpaceUsed'))/128.000,2)) > 500 
+--	and ((convert(decimal(12,2),round((a.size-fileproperty(a.name,'SpaceUsed'))/128.000,2)))/(convert(decimal(12,2),round(a.size/128.000,2))))*100 > 10
+--	order by 4 desc
+	
+--select *, ((FREE_SPACE_MB)/(FILE_SIZE_MB))*100 '%Free' from #temp order by 7 desc
+
+--delete from #temp where fileid in (148, 5, 6, 7, 14, 84, 90)
+
+--select @FILE_SIZE_MB = FILE_SIZE_MB, @SPACE_USED_MB = SPACE_USED_MB, @FREE_SPACE_MB = FREE_SPACE_MB from #temp
+
+set @dbname = 'DEUView'
+
+declare shrink_cur cursor for
+
+select ROUND(CAST(FILE_SIZE_MB as int), -2) FILE_SIZE_MB, ROUND(CAST(SPACE_USED_MB as int), -2) SPACE_USED_MB, 
+CAST(FREE_SPACE_MB as int) FREE_SPACE_MB, NAME from #temp where NAME not like '%log%'
+
+--select FILE_SIZE_MB, SPACE_USED_MB, FREE_SPACE_MB, NAME from #temp
+
+open shrink_cur
+
+fetch next from shrink_cur into @FILE_SIZE_MB, @SPACE_USED_MB, @FREE_SPACE_MB, @NAME
+WHILE (@@Fetch_Status >= 0)        
+BEGIN  
+
+if @SPACE_USED_MB = 0
+begin
+set @SPACE_USED_MB = 1
+end
+
+if @FREE_SPACE_MB >= 10000
+begin
+set @batch_size = 1000
+end
+else
+set @batch_size = 100
+
+
+
+set @shrink_query = 'use '+@dbname+'
+While @FILE_SIZE >= '+@SPACE_USED_MB+'
+Begin
+DBCC SHRINKFILE ('''+@NAME+''',@FILE_SIZE);  
+Select @FILE_SIZE = @FILE_SIZE-'+@batch_size+'
+End'
+
+print(@shrink_query)
+
+EXECUTE sp_executesql @shrink_query, N'@FILE_SIZE int', @FILE_SIZE = @FILE_SIZE_MB
+
+
+fetch next from shrink_cur into @FILE_SIZE_MB, @SPACE_USED_MB, @FREE_SPACE_MB, @NAME      
+END        
+        
+--Get rid of the cursor        
+CLOSE shrink_cur        
+DEALLOCATE shrink_cur
+
+
+--===========================================================================================
+
+
+select
+	a.FILEID,
+	[FILE_SIZE_MB] = 
+		convert(decimal(12,2),round(a.size/128.000,2)),
+	[SPACE_USED_MB] =
+		convert(decimal(12,2),round(fileproperty(a.name,'SpaceUsed')/128.000,2)),
+	[FREE_SPACE_MB] =
+		convert(decimal(12,2),round((a.size-fileproperty(a.name,'SpaceUsed'))/128.000,2)) ,
+	NAME = left(a.NAME,100),
+	FILENAME = left(a.FILENAME,100)
+	from 
+	dbo.sysfiles a where a.filename like '%NLD%DATA%' and 
+	convert(decimal(12,2),round((a.size-fileproperty(a.name,'SpaceUsed'))/128.000,2)) > 1000
+	order by 4 desc

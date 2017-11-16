@@ -1,0 +1,215 @@
+--AMSMediation,AUSTTD_AMS,CHETTD,DEUTTD,DNKTTD,FRATTD,GBRTTD,NLDTTD
+--select * from [LEB-EDWTTD01].DBMONITOR.dbo.DBA_TTD_Archive_Tables where DBName = 'CHETTD'
+
+--create table #DB (DBName varchar(50))
+--insert into #DB values ('AMSMediation')
+--insert into #DB values ('AUSTTD_AMS')
+--insert into #DB values ('CHETTD')
+--insert into #DB values ('DEUTTD')
+--insert into #DB values ('DNKTTD')
+--insert into #DB values ('FRATTD')
+--insert into #DB values ('GBRTTD')
+--insert into #DB values ('NLDTTD')
+
+declare @DBName varchar(30)
+declare @month varchar(5)
+--declare @month_1 varchar(5)
+declare @tablename varchar(50)
+declare @src_location_1 varchar(500)
+declare @src_location_2 varchar(500)
+declare @dst_location varchar(500)
+declare @movequery_1 varchar(1500)
+declare @movequery_2 varchar(1500)
+
+set @month = 12
+
+--select @month
+
+declare curDB cursor for
+          select DBName from #DB
+          
+open curDB
+
+fetch next from curDB into @DBName
+WHILE (@@Fetch_Status >= 0)        
+BEGIN 
+-----------------------------------------------------------------------
+
+declare arctable cursor for
+          select tablename from DBMONITOR.dbo.DBA_TTD_Archive_Tables where DBName = @dbname
+
+open arctable
+
+fetch next from arctable into @tablename
+WHILE (@@Fetch_Status >= 0)        
+BEGIN 
+------------------------------------------------------------------------------------------
+set @month = 12
+
+while @month > 0
+BEGIN
+
+--Y:\Archiving_into_DBs\201211\LEB-EDWTTD01\GBRTTD\File_Backups
+--print @tablename
+set @src_location_1 = '\\leb-edwnas01\dba\Archiving\'+@dbname+'\2012\'+@tablename+'\'
+--set @src_location_2 = '\\leb-edwnas01\dba\Archiving_into_DBs\2012'+@month+'\LEB-EDWTTD01\'+@dbname+'\File_Backups\'
+
+set @dst_location = '\\leb-edwnas01\dba\Archive_Files\2012\'+@month+'\LEB-EDWTTD01\'+@dbname+'\'+@tablename+'\'
+
+if @month < 10
+begin
+set @month = '0'+@month
+end
+
+set @movequery_1= 'move '+@src_location_1+@dbname+'_'+@tablename+'_2012'+@month+'*.txt '+@dst_location
+print(@movequery_1)
+EXEC master..xp_cmdshell @movequery_1
+
+--set @movequery_2= 'move '+@src_location_2+@dbname+'_'+@tablename+'_2012'+@month+'*.txt '+@dst_location
+--print(@movequery_2)
+--EXEC master..xp_cmdshell @movequery_2
+
+SET @month = @month - 1
+
+END
+--print @dbname
+--print @tablename
+------------------------------------------------------------------------------------------
+fetch next from arctable into @tablename      
+END        
+        
+--Get rid of the cursor        
+CLOSE arctable        
+DEALLOCATE arctable
+
+
+-----------------------------------------------------------------------
+fetch next from curDB into @DBName    
+END        
+        
+--Get rid of the cursor        
+CLOSE curDB        
+DEALLOCATE curDB
+
+
+==============================================CHECK FILE AND MOVE PREVIOUS========VERIFY_DELETE========================
+
+
+--AMSMediation,AUSTTD_AMS,CHETTD,DEUTTD,DNKTTD,FRATTD,GBRTTD,NLDTTD
+--select * from [LEB-EDWTTD01].DBMONITOR.dbo.DBA_TTD_Archive_Tables where DBName = 'CHETTD'
+
+--create table #DB (DBName varchar(50))
+--insert into #DB values ('AMSMediation')
+----insert into #DB values ('AUSTTD_AMS')
+----insert into #DB values ('CHETTD')
+--insert into #DB values ('DEUTTD')
+--insert into #DB values ('DNKTTD')
+--insert into #DB values ('FRATTD')
+--insert into #DB values ('GBRTTD')
+--insert into #DB values ('NLDTTD')
+
+declare @DBName varchar(30)
+declare @month varchar(5)
+--declare @month_1 varchar(5)
+declare @tablename varchar(50)
+declare @src_location_1 varchar(500)
+declare @src_location_2 varchar(500)
+declare @dst_location varchar(500)
+declare @movequery_1 varchar(1500)
+declare @movequery_2 varchar(1500)
+declare @file_exist nvarchar(1000)
+
+set @month = 6
+
+--select @month
+
+declare curDB cursor for
+          select DBName from #DB
+          
+open curDB
+
+fetch next from curDB into @DBName
+WHILE (@@Fetch_Status >= 0)        
+BEGIN 
+-----------------------------------------------------------------------
+
+declare arctable cursor for
+          select tablename from DBMONITOR.dbo.DBA_TTD_Archive_Tables where DBName = @dbname
+
+open arctable
+
+fetch next from arctable into @tablename
+WHILE (@@Fetch_Status >= 0)        
+BEGIN 
+------------------------------------------------------------------------------------------
+--set @month = 6
+
+--while @month > 0
+--BEGIN
+
+set @src_location_1 = '\\leb-edwnas01\dba\Archiving\'+@dbname+'\2013\'+@tablename+'\'
+
+--set @dst_location = '\\leb-edwnas01\dba\Archive_Files\2013\'+@month+'\LEB-EDWTTD01\'+@dbname+'\'+@tablename+'\'
+set @dst_location = '\\Leb-edwnas01\dba\Archiving\Verify_Delete\'+@dbname+'\'
+
+--\\Leb-edwnas01\dba\Archiving\Verify_Delete\AMSMediation
+
+--AMSMediation_ERC_IN_CDE_T_201307_01_07
+--AMSMediation_ERC_IN_CDE_T_201307_01_06
+
+--if @month < 10
+--begin
+--set @month = '0'+@month
+--end
+
+declare @FileOK  INT
+
+set @file_exist = 'exec xp_fileExist ''\\Leb-edwnas01\dba\Archiving\'+@dbname+'\2013\'+@tablename+'\'+@dbname+'_'+@tablename+'_201307_08_14.txt'' ,@FileOK OUTPUT'
+--print (@file_exist)
+exec sp_executesql @file_exist, N'@FileOK int output', @FileOK output
+--print (@FileOK)
+
+--exec xp_fileExist '\\Leb-edwnas01\dba\Archiving\AMSMediation\2013\ERC_IN_CDE_T\AMSMediation_ERC_IN_CDE_T_201307_01_07.txt' ,@FileOK OUTPUT
+--select @FileOK
+
+if @FileOK = 1
+begin
+set @movequery_1= 'move '+@src_location_1+@dbname+'_'+@tablename+'_201307_08_13*.txt '+@dst_location
+print(@movequery_1)
+EXEC master..xp_cmdshell @movequery_1
+end
+
+
+--SET @month = @month - 1
+
+--END
+
+------------------------------------------------------------------------------------------
+fetch next from arctable into @tablename      
+END        
+        
+--Get rid of the cursor        
+CLOSE arctable        
+DEALLOCATE arctable
+
+
+-----------------------------------------------------------------------
+fetch next from curDB into @DBName    
+END        
+        
+--Get rid of the cursor        
+CLOSE curDB        
+DEALLOCATE curDB
+
+ 
+
+
+
+
+
+
+ 
+
+
+
+

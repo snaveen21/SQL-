@@ -1,0 +1,311 @@
+
+
+DECLARE @ServerIP VARCHAR(100)--, -- SQL Server - Database Server IP Address  
+DECLARE @Environment VARCHAR(100)--, -- Name of project or cleint   
+DECLARE @Recepients VARCHAR(2000)--, -- Recepient(s) of this email (; separated in case of multiple recepients).  
+DECLARE @MailProfile VARCHAR(100)--, -- Mail profile name which exists on the target database server  
+DECLARE @Owner VARCHAR(200) -- Owner, basically name/email of the DBA responsible for the server  
+    
+SET @ServerIP = CONVERT(sysname, SERVERPROPERTY('servername'))--'LEB-MONITOR'  --SERVERPROPERTY('servername') 
+SET @Environment = 'PRODUCTION'
+SET @Recepients = 'DBA@Lebara.com'--'Tejinder.Gahir@Lebara.com'--
+SET @MailProfile = 'DBA' --'SQLAdminProfile' --'SQLAlerts'   --'SQLAdminProfile'
+SET @Owner = 'TEJ - Lebara'
+  
+DECLARE  @TableHTML  VARCHAR(MAX)      
+DECLARE  @StrSubject VARCHAR(100)      
+DECLARE  @OriServer VARCHAR(100)  
+--DECLARE  @Version VARCHAR(250)  
+--DECLARE  @Edition VARCHAR(100)  
+--DECLARE  @ISClustered VARCHAR(100)  
+--DECLARE  @SP VARCHAR(100) 
+--DECLARE  @ServerCollation VARCHAR(100)  
+--DECLARE  @SingleUser VARCHAR(5)  
+--DECLARE  @LicenseType VARCHAR(100)  
+--DECLARE  @StarDate DATETIME  
+--DECLARE  @EndDate DATETIME  
+--DECLARE  @Cnt int  
+--DECLARE  @URL varchar(1000)  
+--DECLARE  @Str varchar(1000)  
+--DECLARE  @MSSQLServer    varchar(50)  
+--DECLARE  @SQLServerAgent varchar(50)         
+--DECLARE  @MSDTC        varchar(50) 
+--DECLARE  @SQLStartDate   varchar(20)  
+
+SELECT @OriServer = CONVERT(VARCHAR(50), SERVERPROPERTY('servername'))    
+SELECT @StrSubject = 'TEJ - DB Server Daily Health Checks ('+ CONVERT(VARCHAR(50), SERVERPROPERTY('servername')) + ')'      
+
+
+
+SET @TableHTML =      
+ '<font face="Verdana" size="4" color="#7E2217">TEJs - DBA Server Status Report</font>    
+ <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="75%" id="AutoNumber1" height="50">    
+ <tr>    
+</tr>    
+   
+ </table> '
+
+ SELECT   
+ @TableHTML =  @TableHTML +   
+ '<p style="margin-top: 1; margin-bottom: 0">&nbsp;</p>  
+ <font face="Verdana" size="4"color="#7E2217">Active Node</font>  
+ <table id="AutoNumber1" style="BORDER-COLLAPSE: collapse" borderColor="#111111" height="40" cellSpacing="0" cellPadding="0" width="193" border="1">  
+   <tr>  
+  <td width="35%" bgColor="#737CA1" height="15"><b>  <font face="Verdana" size="1" align="center" color="#FFFFFF">Active Node</font></b></td>  
+  </tr>
+  ' 
+ SELECT
+ @TableHTML =  @TableHTML +   
+ '<td><font face="Verdana" size="2" align="center">' + ISNULL(CONVERT(Nvarchar(20),SERVERPROPERTY('ComputerNamePhysicalNetBIOS')), '') +'</font></td>
+ </tr>'
+ 
+ SET @TableHTML = @TableHTML +  
+ '</table>'  
+
+SELECT   
+@TableHTML =  @TableHTML +   
+'<p style="margin-top: 1; margin-bottom: 0">&nbsp;</p>  
+<font face="Verdana" size="4"color="#7E2217">Disk Usage</font>  
+<table id="AutoNumber1" style="BORDER-COLLAPSE: collapse" borderColor="#111111" height="40" cellSpacing="0" cellPadding="0" width="733" border="1">  
+<tr>  
+<td width="21%" bgColor="#737CA1" height="15"><b>  <font face="Verdana" size="1" align="center" color="#FFFFFF">ServerName</font></b></td>  
+<td width="5%"  bgColor="#737CA1" height="15"><b>  <font face="Verdana" size="1" align="centre" color="#FFFFFF">Drive</font></b></td>  
+<td width="11%" bgColor="#737CA1" height="15"><b>  <font face="Verdana" size="1" align="center" color="#FFFFFF">Total(MB)</font></b></td>  
+<td width="11%" bgColor="#737CA1" height="15"><b>  <font face="Verdana" size="1" align="center" color="#FFFFFF">Free(MB</font></b></td>  
+<td width="11%" bgColor="#737CA1" height="15"><b>  <font face="Verdana" size="1" align="center" color="#FFFFFF">Total(GB)</font></b></td>  
+<td width="11%" bgColor="#737CA1" height="15"><b>  <font face="Verdana" size="1" align="center" color="#FFFFFF">Free(GB)</font></b></td>  
+<td width="11%" bgColor="#737CA1" height="15"><b>  <font face="Verdana" size="1" align="center" color="#FFFFFF">FreeSpace%</font></b></td>  
+</tr> 
+'    
+--Disk Status  Detail
+
+SET NOCOUNT ON  
+DECLARE @hr int  
+DECLARE @fso int  
+DECLARE @drive char(1)  
+DECLARE @odrive int  
+DECLARE @TotalSize varchar(20)   
+DECLARE @MB Numeric ;   
+SET @MB = 1048576  
+  
+CREATE TABLE #drives (drive char(1) PRIMARY KEY, FreeSpace int NULL,TotalSize int NULL)   
+INSERT #drives(drive,FreeSpace)   
+EXEC master.dbo.xp_fixeddrives   
+  
+EXEC @hr=sp_OACreate'Scripting.FileSystemObject',@fso OUT IF @hr <> 0 EXEC sp_OAGetErrorInfo @fso  
+DECLARE dcur CURSOR LOCAL FAST_FORWARD  
+FOR SELECT drive from #drives ORDER by drive  
+OPEN dcur FETCH NEXT FROM dcur INTO @drive  
+WHILE @@FETCH_STATUS=0  
+BEGIN  
+EXEC @hr = sp_OAMethod @fso,'GetDrive', @odrive OUT, @drive  
+IF @hr <> 0 EXEC sp_OAGetErrorInfo @fso EXEC @hr =  
+sp_OAGetProperty  
+@odrive,'TotalSize', @TotalSize OUT IF @hr <> 0 EXEC sp_OAGetErrorInfo  
+@odrive UPDATE #drives SET TotalSize=@TotalSize/@MB WHERE  
+drive=@drive FETCH NEXT FROM dcur INTO @drive  
+End  
+Close dcur  
+DEALLOCATE dcur  
+EXEC @hr=sp_OADestroy @fso IF @hr <> 0 EXEC sp_OAGetErrorInfo @fso  
+
+SELECT 
+@@Servername as ServerName,
+drive, 
+CAST(TotalSize AS DECIMAL (10,2)) as 'Total(MB)', 
+CAST(FreeSpace AS DECIMAL (10,2)) as 'Free(MB)', 
+CAST(CAST(TotalSize AS DECIMAL (10,2))/1024 AS DECIMAL (10,2)) as 'Total(GB)',
+CAST(CAST(FreeSpace AS DECIMAL (10,2))/1024 AS DECIMAL (10,2)) as 'Free(GB)',
+CAST((CAST(FreeSpace AS DECIMAL (10,2)) / CAST(TotalSize AS DECIMAL (10,2)))*100 AS DECIMAL (10,2)) as [FreeSpace%]
+--(FreeSpace)/(TotalSize)*100 as [FreeSpace%]
+INTO #DrivesSummary
+FROM #drives
+ORDER BY drive 
+
+
+
+--select * from #DrivesSummary
+
+
+
+SELECT   
+	@TableHTML =  @TableHTML +    
+	'<tr><td><font face="Verdana" size="1" align="center">' + ISNULL(CONVERT(VARCHAR(100), ServerName), '') +'</font></align></td>'  + 
+	'<td><font face="Verdana" size="2" align="centre">' + ISNULL(CONVERT(VARCHAR(100), drive), '') +'</font></td>'  +  
+	'<td><font face="Verdana" size="1" align="center">' + ISNULL(CONVERT(VARCHAR(100), [Total(MB)]), '') +'</font></td>'  +  
+	'<td><font face="Verdana" size="1" align="center">' + ISNULL(CONVERT(VARCHAR(100), [Free(MB)]), '') +'</font></td>'  +  
+	'<td><font face="Verdana" size="1" align="center">' + ISNULL(CONVERT(VARCHAR(100), [Total(GB)]), '') +'</font></td>'  +  
+	'<td><font face="Verdana" size="1" align="center">' + ISNULL(CONVERT(VARCHAR(100), [Free(GB)]), '') +'</font></td>'  +  
+--	CASE WHEN [FreeSpace%] < 15 then '<td><font face="Verdana" size="1" align="center">' + ISNULL(CONVERT(VARCHAR(100), ISNULL(CAST((CAST([Free(MB)] AS DECIMAL (10,2)) / CAST([Total(MB)] AS DECIMAL (10,2)))*100 AS DECIMAL (10,2)),'')),'') +'</font></td></tr>'   
+--	ELSE '<td bgColor="#ff0000"><b><blink><font face="Verdana" size="1" align="center">'+ ISNULL(CONVERT(VARCHAR(100), ISNULL(CAST((CAST([Free(MB)] AS DECIMAL (10,2)) / CAST([Total(MB)] AS DECIMAL (10,2)))*100 AS DECIMAL (10,2)),'')),'') +'</a></font></blink></b></td>'  
+--END 
+
+CASE WHEN [FreeSpace%] > 15 then '<td><font face="Verdana" size="1" align="centre">' + ISNULL(CONVERT(VARCHAR(100),CONVERT(DEC (10,2),[Free(MB)] /[Total(MB)])*100),'') +'</font></td>'     
+ELSE  '<td bgColor="#ff0000"><b><blink><font face="Verdana" size="2" align="centre">'+ ISNULL(CONVERT(VARCHAR(100),CONVERT(DEC (10,2),[Free(MB)] /[Total(MB)])*100),'') +'</a></font></blink></b></td></tr>'
+END 	
+--'<td><font face="Verdana" size="1" align="center">' + ISNULL(CONVERT(VARCHAR(100),CONVERT(DEC (10,2),[Free(MB)] /[Total(MB)])*100),'') +'</font></td>
+-- </tr>
+ --'
+
+FROM   
+ #DrivesSummary
+ ORDER BY drive   
+   
+  
+SET @TableHTML =  @TableHTML + 
+'</table>'  
+
+ --__________________________________________________________________________________________________
+ 
+ -- INSERT #jobs_status EXEC msdb.dbo.sp_help_job      
+select sj.job_id, sj.name, sc.name as Category, sj.enabled, sjs.last_run_outcome,  
+        (select max(run_date) from msdb..sysjobhistory sjh where sjh.job_id = sj.job_id) as last_run_date  
+into #jobs_status  
+from msdb..sysjobs sj  
+join msdb..syscategories sc  
+        on sj.category_id = sc.category_id  
+join msdb.dbo.sysjobservers sjs  
+        on sjs.job_id = sj.job_id
+
+  
+--Job Status  
+SET @TableHTML = @TableHTML +  
+ '<p style="margin-top: 1; margin-bottom: 0">&nbsp;</p>  
+ <font face="Verdana" size="4" color="#7E2217">Job Status</font>  
+ <table style="BORDER-COLLAPSE: collapse" borderColor="#111111" cellPadding="0" width="933" bgColor="#ffffff" borderColorLight="#000000" border="1">    
+ <tr>    
+ <th align="left" width="432" bgColor="#737CA1">    <font face="Verdana" size="1" color="#FFFFFF">Job Name</font></th>    
+ <th align="left" width="91" bgColor="#737CA1">     <font face="Verdana" size="1" color="#FFFFFF">Enabled</font></th>    
+ <th align="left" width="85" bgColor="#737CA1">     <font face="Verdana" size="1" color="#FFFFFF">Last Run</font></th>    
+ <th align="left" width="183" bgColor="#737CA1">    <font face="Verdana" size="1" color="#FFFFFF">Category</font></th>    
+ <th align="left" width="136" bgColor="#737CA1">    <font face="Verdana" size="1" color="#FFFFFF">Last Run Date</font></th>    
+ <th align="left" width="136" bgColor="#737CA1">    <font face="Verdana" size="1" color="#FFFFFF">Execution Time (Mi)</font></th>    
+ </tr>'  
+    
+
+--WHEN 0 THEN 'Failed' 
+--WHEN 1 THEN 'Succeeded' 
+--WHEN 2 THEN 'Retry' 
+--WHEN 3 THEN 'Canceled' 
+--WHEN 4 THEN 'In progress'
+
+  
+SELECT   
+ @TableHTML = @TableHTML + '<tr><td><font face="Verdana" size="1">' +   
+    ISNULL(CONVERT(VARCHAR(100), A.name), '') +'</font></td>' +       CASE enabled    
+  WHEN 0 THEN '<td bgcolor="#FFCC99"><b><font face="Verdana" size="1">False</font></b></td>'    
+  WHEN 1 THEN '<td><font face="Verdana" size="1">True</font></td>'    
+ ELSE '<td><font face="Verdana" size="1">Unknown</font></td>'    
+ END  +     
+ CASE last_run_outcome       
+  WHEN 0 THEN '<td bgColor="#ff0000"><b><blink><font face="Verdana" size="2">  
+  <a href="mailto:dba@lebara.com?subject=Job failure - ' + @OriServer + '(' + @ServerIP + ') '+ CONVERT(VARCHAR(15), GETDATE(), 101) +'&cc=dba@lebara.com&body = SD please log this call to DB support,' + '%0A %0A' + '<<' + ISNULL(CONVERT(VARCHAR(100), name),'''') + '>> Job Failed on ' + @OriServer + '(' + @ServerIP + ')'+ '.' +'%0A%0A Regards,'+'">Failed</a></font></blink></b></td>'  
+  WHEN 1 THEN '<td><font face="Verdana" size="1">Success</font></td>'    
+  WHEN 3 THEN '<td><font face="Verdana" size="1">Cancelled</font></td>'    
+  WHEN 5 THEN '<td><font face="Verdana" size="1">Unknown</font></td>'    
+ ELSE '<td><font face="Verdana" size="1">Other</font></td>'    
+ END  +     
+ '<td><font face="Verdana" size="1">' + ISNULL(CONVERT(VARCHAR(100), A.category),'') + '</font></td>' +     
+ '<td><font face="Verdana" size="1">' + ISNULL(CONVERT(VARCHAR(50), A.last_run_date),'') + '</font></td>' +  
+ '<td><font face="Verdana" size="1">' + ISNULL(CONVERT(VARCHAR(50), X.execution_time_minutes),'') +'</font></td> </tr>'     
+FROM   
+ #jobs_status A  
+ inner join (  
+    select   
+     A.job_id,  
+     datediff(mi, A.last_executed_step_date, A.stop_execution_date) execution_time_minutes   
+    from   
+     msdb..sysjobactivity A  
+ inner join (  
+    select   
+     max(session_id) sessionid,  
+     job_id   
+    from   
+     msdb..sysjobactivity   
+    group by   
+     job_id  
+    ) B on A.job_id = B.job_id and A.session_id = B.sessionid  
+ inner join (  
+    select   
+     distinct name,   
+     job_id   
+    from   
+     msdb..sysjobs  
+    ) C on A.job_id = C.job_id  
+    ) X on A.job_id = X.job_id 
+WHERE last_run_outcome IN (0,3,4)     
+ORDER BY   
+ last_run_outcome,last_run_date DESC    
+  
+SET @TableHTML = @TableHTML +  
+ '</table>'  
+
+
+
+ SELECT   
+ @TableHTML =  @TableHTML + '</table>' +     
+ '<p style="margin-top: 0; margin-bottom: 0">&nbsp;</p>  
+ <hr color="#000000" size="1">  
+ <p><font face="Verdana" size="2"><b>Server Owner:</b> '+@Owner+'</font></p>    
+ <p style="margin-top: 0; margin-bottom: 0"><font face="Verdana" size="2">Thanks and Regards,</font></p>    
+ <p style="margin-top: 0; margin-bottom: 0"><font face="Verdana" size="2">The DBA Team</font></p>    
+ <p>&nbsp;</p>' 
+ 
+
+ 
+ 
+ EXEC msdb.dbo.sp_send_dbmail    
+ @profile_name = @MailProfile,      
+ @recipients=@Recepients,      
+ @subject = @StrSubject,      
+ @body = @TableHTML,      
+ @body_format = 'HTML' ;      
+ 
+ DROP TABLE #drives 
+ DROP TABLE #DrivesSummary 
+ DROP TABLE #jobs_status
+
+--_________________
+--SELECT   
+--	ISNULL(CONVERT(VARCHAR(100), ServerName),''), 
+--	ISNULL(CONVERT(VARCHAR(100), drive), ''),
+--	ISNULL(CONVERT(VARCHAR(100), [Total(MB)]), ''),
+--	ISNULL(CONVERT(VARCHAR(100), [Free(MB)]), ''), 
+--	ISNULL(CONVERT(VARCHAR(100), [Total(GB)]), ''),
+--	ISNULL(CONVERT(VARCHAR(100), [Free(GB)]), ''), 
+	--CASE WHEN [FreeSpace%] < 15 then ISNULL(CONVERT(VARCHAR(100), ISNULL(CAST((CAST([Free(MB)] AS DECIMAL (10,2)) / CAST([Total(MB)] AS DECIMAL (10,2)))*100 AS DECIMAL (10,2)),'')),'')   
+	--ELSE  ISNULL(CONVERT(VARCHAR(100), ISNULL(CAST((CAST([Free(MB)] AS DECIMAL (10,2)) / CAST([Total(MB)] AS DECIMAL (10,2)))*100 AS DECIMAL (10,2)),'')),'') 
+--END 
+--	CASE WHEN [FreeSpace%] < 15 then ISNULL(CONVERT(VARCHAR(100),[Free(MB)] /[Total(MB)])*100,'')   
+--	ELSE  ISNULL(CONVERT(VARCHAR(100),[Free(MB)] /[Total(MB)])*100,'') 
+--END 
+
+	--CASE WHEN [FreeSpace%] < '15' then ISNULL(([Free(MB)] /[Total(MB)]*100),'')   
+	--ELSE ISNULL(([Free(MB)] /[Total(MB)]*100),'') 
+	--END 
+	
+--___________________________________________________________________________________________________________________
+--This Works	
+--CASE WHEN [FreeSpace%] < 15 then ISNULL(CONVERT(VARCHAR(100),CONVERT(DEC (10,2),[Free(MB)] /[Total(MB)])*100),'')   
+--ELSE  ISNULL(CONVERT(VARCHAR(100),CONVERT(DEC (10,2),[Free(MB)] /[Total(MB)])*100),'') 
+--END 	
+
+----ISNULL(CONVERT(VARCHAR(100),CONVERT(DEC (10,2),[Free(MB)] /[Total(MB)])*100),'')
+	
+--FROM   
+-- #DrivesSummary
+-- ORDER BY drive   
+
+
+--sp_help #DrivesSummary
+--ServerName	nvarchar
+--drive	char
+--Total(MB)	decimal
+--Free(MB)	decimal
+--Total(GB)	decimal
+--Free(GB)	decimal
+--FreeSpace%	decimal
+--___________________
+  
+
+
